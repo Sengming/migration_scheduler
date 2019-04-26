@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{E67EB41A-8F0A-468D-B77A-F257CD12D4CF}</ProjectGuid>
+    <RootNamespace>SchedulerSimulator</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="Containers\AbstractContainer.h" />
+    <ClInclude Include="Containers\Queue.h" />
+    <ClInclude Include="Containers\Set.h" />
+    <ClInclude Include="Iterators\AbstractIterator.h" />
+    <ClInclude Include="Iterators\AvailableTasksIterator.h" />
+    <ClInclude Include="Iterators\GeneralIterator.h" />
+    <ClInclude Include="Monitor\LogEvent.h" />
+    <ClInclude Include="Monitor\Monitor.h" />
+    <ClInclude Include="Scheduler.h" />
+    <ClInclude Include="Schedulers\EDF.h" />
+    <ClInclude Include="Schedulers\FIFO.h" />
+    <ClInclude Include="Schedulers\RM.h" />
+    <ClInclude Include="Schedulers\RR.h" />
+    <ClInclude Include="SimulatorCore\Event.h" />
+    <ClInclude Include="SimulatorCore\Model.h" />
+    <ClInclude Include="SimulatorCore\Simulator.h" />
+    <ClInclude Include="SimulatorCore\Task.h" />
+    <ClInclude Include="SimulatorCore\TaskHandler.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Monitor\LogEvent.cpp" />
+    <ClCompile Include="Monitor\Monitor.cpp" />
+    <ClCompile Include="Scheduler.cpp" />
+    <ClCompile Include="SchedulerSimulator.cpp" />
+    <ClCompile Include="Schedulers\EDF.cpp" />
+    <ClCompile Include="Schedulers\FIFO.cpp" />
+    <ClCompile Include="Schedulers\RM.cpp" />
+    <ClCompile Include="Schedulers\RR.cpp" />
+    <ClCompile Include="SimulatorCore\Event.cpp" />
+    <ClCompile Include="SimulatorCore\Model.cpp" />
+    <ClCompile Include="SimulatorCore\Simulator.cpp" />
+    <ClCompile Include="SimulatorCore\Task.cpp" />
+    <ClCompile Include="SimulatorCore\TaskHandler.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,89 @@
+\NeedsTeXFormat{LaTeX2e}[1995/12/01]
+\ProvidesPackage{rtsched_beamer}[2005/01/01]
+\typeout{'rtsched_beamer' style for Latex and PSTricks}
+\typeout{Easily draw real-time schedules in Beamer (see rtsched.sty).}
+\typeout{(c) 2005, Giuseppe Lipari, Pisa, Italy}
+\typeout{}
+
+\RequirePackage{rtsched}
+
+%% Task Arrival: draws an up arrow at the specified slot
+%% #1  : task number from 1 to n
+%% #2  : slot number from 0 to l-1
+\renewcommand<>{\TaskArrival}[3][nocommand=1]{
+  \only#4{\beameroriginal{\TaskArrival}[#1]{#2}{#3}}
+}
+
+%% Task Arrival and deadline: draws an up arrow and a down arrow at the specified slots
+%% #1  : task number from 1 to n
+%% #2  : slot number from 0 to l-1
+%% #3  : relative deadline
+\renewcommand<>{\TaskArrDead}[4][nocommand=1]{
+  \only#5{\beameroriginal{\TaskArrDead}[#1]{#2}{#3}{#4}}
+}
+
+%% Task Deadline: draws a down arrow at the specified slot
+%% #1  : task number from 1 to n
+%% #2  : slot number from 0 to l-1
+\renewcommand<>{\TaskDeadline}[3][nocommand=1]{%
+  \only#4{\beameroriginal{\TaskDeadline}[#1]{#2}{#3}}
+}
+
+\renewcommand<>{\TaskExecution}[4][nocommand=1]{
+  \only#5{\beameroriginal{\TaskExecution}[#1]{#2}{#3}{#4}}
+}
+
+% 
+% par 1:  task 
+% par 2:  time
+% par 3:  resource
+%
+\renewcommand<>{\TaskLock}[4][nocommand=1]{
+  \only#5{\beameroriginal{\TaskLock}[#1]{#2}{#3}{#4}}  
+}
+
+% 
+% par 1:  task 
+% par 2:  time
+% par 3:  resource
+%
+\renewcommand<>{\TaskUnlock}[4][nocommand=1]{
+  \only#5{\beameroriginal{\TaskUnlock}[#1]{#2}{#3}{#4}}  
+}
+
+% 
+% par 1:  task 
+% par 2:  time
+% par 3:  resource
+%
+\renewcommand<>{\TaskLabel}[4][nocommand=1]{
+  \only#5{\beameroriginal{\TaskLabel}[#1]{#2}{#3}{#4}}  
+}
+
+% 
+% par 1:  higher priority task (from) 
+% par 2:  lower priority task (to)
+% par 3:  time
+%
+\renewcommand<>{\Inherit}[4][nocommand=1]{
+  \only#5{\beameroriginal{\Inherit}[#1]{#2}{#3}{#4}}  
+}
+
+% 
+% par 1:  time1
+% par 2:  time2
+%
+\renewcommand<>{\RTBox}[3][nocommand=1]{
+  \only#4{\beameroriginal{\RTBox}[#1]{#2}{#3}}  
+}
+
+%
+% par 1: task
+% par 2: first instant (arrival)
+% par 3: second instant (deadline)
+%
+\renewcommand<>{\TaskInterval}[4][nocommand=1]{
+  \only#5{\beameroriginal{\TaskInterval}[#1]{#2}{#3}{#4}}  
+}
+
+\endinput

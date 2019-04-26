@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Iterators">
+      <UniqueIdentifier>{f44e56a4-6302-4897-ab4f-6935eea2dc5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Containers">
+      <UniqueIdentifier>{3b935872-6ee3-4a25-bfc1-da2c080e3c50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Schedulers">
+      <UniqueIdentifier>{8954cd30-12e6-49e1-94d0-e5a065b8fbd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Monitor">
+      <UniqueIdentifier>{4ff553da-ebb5-483a-a894-dccc1b76baa1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Scheduler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Schedulers\EDF.h">
+      <Filter>Schedulers</Filter>
+    </ClInclude>
+    <ClInclude Include="Schedulers\FIFO.h">
+      <Filter>Schedulers</Filter>
+    </ClInclude>
+    <ClInclude Include="Schedulers\RM.h">
+      <Filter>Schedulers</Filter>
+    </ClInclude>
+    <ClInclude Include="Schedulers\RR.h">
+      <Filter>Schedulers</Filter>
+    </ClInclude>
+    <ClInclude Include="Monitor\LogEvent.h">
+      <Filter>Monitor</Filter>
+    </ClInclude>
+    <ClInclude Include="Monitor\Monitor.h">
+      <Filter>Monitor</Filter>
+    </ClInclude>
+    <ClInclude Include="Iterators\AbstractIterator.h">
+      <Filter>Iterators</Filter>
+    </ClInclude>
+    <ClInclude Include="Iterators\AvailableTasksIterator.h">
+      <Filter>Iterators</Filter>
+    </ClInclude>
+    <ClInclude Include="Iterators\GeneralIterator.h">
+      <Filter>Iterators</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\AbstractContainer.h">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\Queue.h">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Containers\Set.h">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="SimulatorCore\Event.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SimulatorCore\Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SimulatorCore\Simulator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SimulatorCore\Task.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SimulatorCore\TaskHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Scheduler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SchedulerSimulator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Schedulers\EDF.cpp">
+      <Filter>Schedulers</Filter>
+    </ClCompile>
+    <ClCompile Include="Schedulers\FIFO.cpp">
+      <Filter>Schedulers</Filter>
+    </ClCompile>
+    <ClCompile Include="Schedulers\RM.cpp">
+      <Filter>Schedulers</Filter>
+    </ClCompile>
+    <ClCompile Include="Schedulers\RR.cpp">
+      <Filter>Schedulers</Filter>
+    </ClCompile>
+    <ClCompile Include="Monitor\LogEvent.cpp">
+      <Filter>Monitor</Filter>
+    </ClCompile>
+    <ClCompile Include="Monitor\Monitor.cpp">
+      <Filter>Monitor</Filter>
+    </ClCompile>
+    <ClCompile Include="SimulatorCore\Event.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SimulatorCore\Model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SimulatorCore\Simulator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SimulatorCore\Task.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SimulatorCore\TaskHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
