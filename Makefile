@@ -1,6 +1,6 @@
 #declerations
 CC = g++
-CFLAGS = -c -std=c++11
+CFLAGS = -c -std=c++11 -g -O0
 DIRECTORIES = Schedulers/ Monitor/ SimulatorCore/
 SRC_FILES = $(filter-out SchedulerSimulator.cpp, $(wildcard *.cpp))
 
@@ -14,7 +14,7 @@ directories:
 	mkdir -p objects/
 	for dir in $(DIRECTORIES); do\
 		cd $$dir;\
-		g++ -w -c -std=c++11 *.cpp; \
+		g++ -w -c -g -O0 -std=c++11 *.cpp; \
 		mv *.o ../objects; \
 		cd -;\
 	done

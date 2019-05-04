@@ -1,11 +1,11 @@
 #include "Simulator.h"
+#include "RemoteSimulator.h"
 
-
-int Simulator::runSimulation(Model* myModel, Set<Model*>& remoteModels)
+int Simulator::runSimulation(Model* myModel, Set<RemoteSimulator*>& remoteSimulators)
 {
 	//Initialization
 	AbstractIterator<Event*>* eventIterator = eventQueue.createIterator();
-	AbstractIterator<Model*>* remoteModelIterator = remoteModels.createIterator();
+	AbstractIterator<RemoteSimulator*>* remoteSimIterator = remoteSimulators.createIterator();
 
 	simModel = myModel;
 	runTime = simModel->RunTime;
@@ -17,14 +17,14 @@ int Simulator::runSimulation(Model* myModel, Set<Model*>& remoteModels)
 	logMonitor.Initialize(simModel->ModelName);
 	logMonitor.logTasks(*(simModel->TaskSet));
 
-	// Initialize all remote models to have their individual task sets
-	for(remoteModelIterator->First(); !remoteModelIterator->IsDone(); remoteModelIterator->Next()){
-		Model* remoteModel = remoteModelIterator->CurrentItem();
-		remoteModel->scheduler->setTasks(remoteModel->TaskSet);
-	}
-
 	double time = 0;
 	Event* NextEvent;
+
+	// Remote Sim Set individual scheduler tasks
+	for(remoteSimIterator->First(); !remoteSimIterator->IsDone(); remoteSimIterator->Next()){
+		RemoteSimulator* remoteSim = remoteSimIterator->CurrentItem();
+		remoteSim->initializeRemoteSim();
+	}
 
 	//Create First Event
 	Event first(TimeInterrupt, 0);
@@ -66,16 +66,22 @@ int Simulator::runSimulation(Model* myModel, Set<Model*>& remoteModels)
 			onSimulationFinished(time);
 			break;
 		case MigrateToRemote:
+		
 			break;
 		case RemoteComplete:
 			break;
 		default:
 			break;
 		}
+		// Tick all remote simulations
+	 	for(remoteSimIterator->First(); !remoteSimIterator->IsDone(); remoteSimIterator->Next()){
+	 		RemoteSimulator* remoteSim = remoteSimIterator->CurrentItem();
+	 		remoteSim->tickRemoteSimulations(time);
+			
+		 }
 	}
 	return 1;
 }
-
 
 Simulator::Simulator()
 {
@@ -103,6 +109,11 @@ void Simulator::onTimeInterrupt(double time)
 void Simulator::runScheduler(double time)
 {
 	Task* nextTask(0);
+
+	// If task set is empty we don't want to schedule
+	if (simModel->isTaskSetEmpty()){
+		return;
+	}
 
 	//Ask Scheduler to schedule if there are any tasks available.
 	if (simModel->modelTaskHandler.taskAvailable())

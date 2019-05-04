@@ -25,6 +25,7 @@ modelTaskHandler: A handler for the task set, updating tasks, etc.
 class Model
 {
 	friend class Simulator;
+	friend class RemoteSimulator;
 private:
 	Set<Task*>* TaskSet;
 	Scheduler* scheduler;
@@ -41,6 +42,7 @@ public:
 	Model(std::string modelName, int numberOfPeriodicTasks, int numberOfAperiodicTask, Scheduler* modelScheduler);
 	~Model();
 
+	bool isTaskSetEmpty();
 	void setModelName(std::string modelName);
 	void setScheduler(Scheduler* myScheduler);
 	void setTaskSet(Set<Task*>* myTasks);

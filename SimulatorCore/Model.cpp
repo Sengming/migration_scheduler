@@ -77,3 +77,8 @@ void Model::setTimeInterval(double time)
 	TimeInterval = time;
 }
 
+bool Model::isTaskSetEmpty()
+{
+	return (TaskSet->numberOfItems() == 0);
+
+}

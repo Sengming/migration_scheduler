@@ -3,7 +3,8 @@
 #include"Containers/Set.h"
 #include"Iterators/AbstractIterator.h"
 #include"SimulatorCore/Model.h"
-#include"SimulatorCore/Simulator.h"
+#include "SimulatorCore/Simulator.h"
+#include "SimulatorCore/RemoteSimulator.h"
 
 //Include Schedulers here
 #include"Schedulers/RM.h"
@@ -54,9 +55,12 @@ int main()
 	Set<Task*> remoteTasks[5];
 	Set<Model*> remoteModels;
 
-	//Create models
+	Set <RemoteSimulator*> remoteSimulators;
+
+	//Create models and simulators
 	Model localModel("LocalModel", &myTasks, &SchedulerFIFO, runtime);
-	
+
+
 	Model remoteModel0("RemoteModel", &remoteTasks[0], &SchedulerEDF[0], runtime);
 	Model remoteModel1("RemoteModel", &remoteTasks[1], &SchedulerEDF[1], runtime);
 	Model remoteModel2("RemoteModel", &remoteTasks[2], &SchedulerEDF[2], runtime);
@@ -68,12 +72,24 @@ int main()
 	remoteModels.addItem(&remoteModel2);
 	remoteModels.addItem(&remoteModel3);
 	remoteModels.addItem(&remoteModel4);
+	
+	RemoteSimulator remoteSimulator0(&remoteModel0);
+	RemoteSimulator remoteSimulator1(&remoteModel1);
+	RemoteSimulator remoteSimulator2(&remoteModel2);
+	RemoteSimulator remoteSimulator3(&remoteModel3);
+	RemoteSimulator remoteSimulator4(&remoteModel4);
+
+	remoteSimulators.addItem(&remoteSimulator0);
+	remoteSimulators.addItem(&remoteSimulator1);
+	remoteSimulators.addItem(&remoteSimulator2);
+	remoteSimulators.addItem(&remoteSimulator3);
+	remoteSimulators.addItem(&remoteSimulator4);
 
 	//Create a simulator
 	Simulator mySimulator;
 
 	//Run simulations
-	mySimulator.runSimulation(&localModel, remoteModels);
+	mySimulator.runSimulation(&localModel, remoteSimulators);
 }
 
 

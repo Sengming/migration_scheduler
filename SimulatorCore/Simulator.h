@@ -4,6 +4,8 @@
 #include"Model.h"
 #include"../Containers/Queue.h"
 
+class RemoteSimulator;
+
 /*************************************************************
 The Simulator conducts the simulation of the behavior of a 
 processor executing a task set using a scheduler policy.
@@ -19,8 +21,7 @@ calls on different functions to handle the event.
 
 class Simulator
 {
-private:
-	Model* simModel;
+protected:
 	Monitor logMonitor;
 
 
@@ -50,6 +51,7 @@ private:
 public:
 	Simulator();
 	~Simulator();
-	int runSimulation(Model* myModel, Set<Model*>& remoteModels);
+	int runSimulation(Model* myModel, Set<RemoteSimulator*>& remoteSimulators);
+	Model* simModel;
 };
 
