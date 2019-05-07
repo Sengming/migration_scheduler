@@ -89,7 +89,7 @@ int main()
 	Simulator mySimulator;
 
 	//Run simulations
-	mySimulator.runSimulation(&localModel, remoteSimulators);
+	mySimulator.runSimulation(&localModel, &remoteSimulators);
 }
 
 

@@ -1,11 +1,11 @@
 #include "Simulator.h"
 #include "RemoteSimulator.h"
 
-int Simulator::runSimulation(Model* myModel, Set<RemoteSimulator*>& remoteSimulators)
+int Simulator::runSimulation(Model* myModel, Set<RemoteSimulator*>* remoteSimulators)
 {
 	//Initialization
 	AbstractIterator<Event*>* eventIterator = eventQueue.createIterator();
-	AbstractIterator<RemoteSimulator*>* remoteSimIterator = remoteSimulators.createIterator();
+	AbstractIterator<RemoteSimulator*>* remoteSimIterator = remoteSimulators->createIterator();
 
 	simModel = myModel;
 	runTime = simModel->RunTime;
@@ -13,6 +13,7 @@ int Simulator::runSimulation(Model* myModel, Set<RemoteSimulator*>& remoteSimula
 	contextSwitch = simModel->ContextSwitch;
 	preemptive = simModel->scheduler->isPreemptive();
 	simModel->scheduler->setTasks(simModel->TaskSet);
+	m_remoteSimulators = remoteSimulators;
 
 	logMonitor.Initialize(simModel->ModelName);
 	logMonitor.logTasks(*(simModel->TaskSet));
@@ -32,9 +33,13 @@ int Simulator::runSimulation(Model* myModel, Set<RemoteSimulator*>& remoteSimula
 	//Create Final Event
 	Event last(SimulationFinished, runTime);
 
+	Event migration(MigrateToRemote, 0);
+
 	//Insert Events in EventQueue
 	eventQueue.addItem(&first);
+	eventQueue.addItem(&migration);
 	eventQueue.addItem(&last);
+
 
 	while (time < runTime)
 	{
@@ -66,7 +71,7 @@ int Simulator::runSimulation(Model* myModel, Set<RemoteSimulator*>& remoteSimula
 			onSimulationFinished(time);
 			break;
 		case MigrateToRemote:
-		
+			onMigrateToRemote(time);
 			break;
 		case RemoteComplete:
 			break;
@@ -74,10 +79,10 @@ int Simulator::runSimulation(Model* myModel, Set<RemoteSimulator*>& remoteSimula
 			break;
 		}
 		// Tick all remote simulations
-	 	for(remoteSimIterator->First(); !remoteSimIterator->IsDone(); remoteSimIterator->Next()){
-	 		RemoteSimulator* remoteSim = remoteSimIterator->CurrentItem();
-	 		remoteSim->tickRemoteSimulations(time);
-			
+		for(remoteSimIterator->First(); !remoteSimIterator->IsDone(); remoteSimIterator->Next()){
+			RemoteSimulator* remoteSim = remoteSimIterator->CurrentItem();
+			remoteSim->tickRemoteSimulations(time);
+
 		 }
 	}
 	return 1;
@@ -217,6 +222,17 @@ void Simulator::onSimulationFinished(double time)
 	resetSimulator();
 }
 
+void Simulator::onMigrateToRemote(double time)
+{
+	// TODO: Change to link to migartionscheduler:
+	addToRemoteTaskSet(0, currentTask);
+}
+
+void Simulator::addToRemoteTaskSet(int simulatorNumber, Task* task)
+{
+	RemoteSimulator* remoteSim = m_remoteSimulators->getItem(simulatorNumber);
+	remoteSim->addToTaskSet(task);
+}
 
 void Simulator::resetSimulator()
 {

@@ -49,5 +49,8 @@ public:
 	void setContextSwitch(double msTime);
 	void setTimeInterval(double time);
 	void setRunTime(double time);
+
+	void addToTaskSet(Task* task);
+	void removeFromTaskSet(Task* task);
 };
 

@@ -137,8 +137,8 @@ void TaskHandler::updateTaskStates(Monitor* myMonitor, double time)
 			if (tempTask->getTarrival() <= time)
 			{
 				tempTask->State = READY;
-				myMonitor->logArrivalTime(*tempTask, time);
-				myMonitor->logDeadline(*tempTask, (tempTask->getDeadline() + time));
+				//myMonitor->logArrivalTime(*tempTask, time);
+				//myMonitor->logDeadline(*tempTask, (tempTask->getDeadline() + time));
 			}
 		}
 	}
@@ -156,7 +156,7 @@ void TaskHandler::checkForDeadlineBreaches(Monitor* myMonitor, double time)
 			if (time - (tempTask->getTarrival()) > tempTask->getDeadline())
 			{
 				//Deadline missed!
-				myMonitor->logDeadlineBreach(*tempTask, (tempTask->getTarrival() + tempTask->getDeadline()));
+				//myMonitor->logDeadlineBreach(*tempTask, (tempTask->getTarrival() + tempTask->getDeadline()));
 				tempTask->DeadlineMissed = true;
 			}
 		}

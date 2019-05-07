@@ -1,5 +1,6 @@
 #pragma once
 #include<vector>
+#include <algorithm>
 #include"AbstractContainer.h"
 #include"../Iterators/GeneralIterator.h"
 #include"../Iterators/AvailableTasksIterator.h"
@@ -62,6 +63,9 @@ long Set<Item>::numberOfItems()
 template<class Item>
 void Set<Item>::remove(Item a)
 {
+	typename std::vector<Item>::iterator itemIterator;
+	itemIterator = std::find(myItems.begin(), myItems.end(), a);
+	myItems.erase(itemIterator);
 }
 
 template<class Item>

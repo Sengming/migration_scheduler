@@ -23,8 +23,9 @@ class RemoteSimulator : public Simulator
 public:
 	RemoteSimulator(Model* model);
 	~RemoteSimulator();
+	void addToTaskSet(Task* task);
 	int tickRemoteSimulations(int time);
 	void initializeRemoteSim();
-	virtual int runSimulation(Model* myModel, Set<RemoteSimulator*>& remoteSimulators);
+	virtual int runSimulation(Model* myModel, Set<RemoteSimulator*>* remoteSimulators);
 };
 

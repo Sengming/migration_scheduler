@@ -2,7 +2,7 @@
 #include "Simulator.h"
 #include <iostream>
 
-int RemoteSimulator::runSimulation(Model* myModel, Set<RemoteSimulator*>& remoteSimulators)
+int RemoteSimulator::runSimulation(Model* myModel, Set<RemoteSimulator*>* remoteSimulators)
 {
 	std::cout << "Remote runSimulations currently not allowed" << std::endl;
 	return 0;
@@ -61,6 +61,10 @@ RemoteSimulator::RemoteSimulator(Model* model) : Simulator()
 	simModel = model;
 }
 
+void RemoteSimulator::addToTaskSet(Task* task)
+{
+	simModel->addToTaskSet(task);
+}
 
 RemoteSimulator::~RemoteSimulator()
 {

@@ -21,6 +21,12 @@ calls on different functions to handle the event.
 
 class Simulator
 {
+private:
+	// Remote simulators
+	Set<RemoteSimulator*>* m_remoteSimulators;
+
+	void addToRemoteTaskSet(int simulatorNumber, Task* task);
+
 protected:
 	Monitor logMonitor;
 
@@ -43,6 +49,8 @@ protected:
 	void onTaskFinished(double time);
 	void onSimulationFinished(double time);
 
+	void onMigrateToRemote(double time);
+
 	void runScheduler(double time);
 	void setUpTaskForExecution(double time);
 
@@ -51,7 +59,7 @@ protected:
 public:
 	Simulator();
 	~Simulator();
-	int runSimulation(Model* myModel, Set<RemoteSimulator*>& remoteSimulators);
+	int runSimulation(Model* myModel, Set<RemoteSimulator*>* remoteSimulators);
 	Model* simModel;
 };
 

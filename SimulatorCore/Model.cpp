@@ -70,8 +70,6 @@ void Model::setContextSwitch(double msTime)
 	ContextSwitch = msTime;
 }
 
-
-
 void Model::setTimeInterval(double time)
 {
 	TimeInterval = time;
@@ -81,4 +79,14 @@ bool Model::isTaskSetEmpty()
 {
 	return (TaskSet->numberOfItems() == 0);
 
+}
+
+void Model::addToTaskSet(Task* task)
+{
+	TaskSet->addItem(task);
+}
+
+void Model::removeFromTaskSet(Task* task)
+{
+	TaskSet->remove(task);
 }
