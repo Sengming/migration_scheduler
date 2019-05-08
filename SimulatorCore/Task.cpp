@@ -67,6 +67,11 @@ Task::~Task()
 }
 
 
+unsigned Task::get_memory_usage()
+{
+       return MemoryUsage;
+}
+
 double Task::getTarrival()
 {
 	return Tarrival;
