@@ -3,6 +3,9 @@
 #include"Containers/Set.h"
 #include<vector>
 #include<cmath>
+#include<stdlib.h>
+#include<iostream>
+using namespace std;
 /***********************************************************
 MigrationScheduler is the class defining the interface that connects
 the implementation of scheduling logic with the simulator.

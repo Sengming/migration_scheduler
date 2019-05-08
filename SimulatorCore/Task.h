@@ -55,7 +55,7 @@ private:
 public:
 	Task();
 	Task(int id, double tarrival, double deadline, double executiontime, double period);  
-        Task(int id, double tarrival, double deadline, double executiontime, double period, unsigned memoryusage=2);
+        Task(int id, double tarrival, double deadline, double executiontime, double period, unsigned memoryusage);
 	Task(int id);
 	~Task();
 
@@ -68,4 +68,5 @@ public:
 	double getTarrival();
 	double getExecutionTime();
 	double getRemainingExecutionTime();
+	unsigned get_memory_usage();
 };

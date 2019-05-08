@@ -1,5 +1,8 @@
-#include<MigrationScheduler.h>
-
+#include"MigrationScheduler.h"
+#include<vector>
+#include<stdlib.h>
+#include<iostream>
+using namespace std;
 MigrationScheduler::MigrationScheduler(unsigned nb_of_boards){
         total_nb_cores = 0;
         total_available_cores = 0;
@@ -78,7 +81,7 @@ unsigned MigrationScheduler::__migrate(Task proc, Board brd){
   // remove the app from running app 
   
   for(auto it = running_app.begin(); it != running_app.end(); ++it){
-    if(it->id == proc.id){
+    if(it->getID() == proc.getID()){
       running_app.erase(it);
     }
   }
