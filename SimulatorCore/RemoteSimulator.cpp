@@ -34,12 +34,15 @@ int RemoteSimulator::tickRemoteSimulations(int time)
 	switch (currentEvent)
 	{
 	case TimeInterrupt:
+		std::cout << "Remote Time interrupt " << time << std::endl;
 		onTimeInterrupt(time);
 		break;
 	case TaskReady:
+		std::cout << "Task Ready " << time << std::endl;
 		onTaskReady(time);
 		break;
 	case TaskFinished:
+		std::cout << "Task Finished " << time << std::endl;
 		onTaskFinished(time);
 		break;
 	default:

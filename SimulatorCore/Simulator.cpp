@@ -70,11 +70,11 @@ int Simulator::runSimulation(Model* myModel, Set<RemoteSimulator*>* remoteSimula
 		case SimulationFinished:
 			onSimulationFinished(time);
 			break;
-		case MigrateToRemote:
-			onMigrateToRemote(time);
-			break;
-		case RemoteComplete:
-			break;
+		//case MigrateToRemote:
+		//	onMigrateToRemote(time);
+		//	break;
+		//case RemoteComplete:
+		//	break;
 		default:
 			break;
 		}
@@ -84,6 +84,20 @@ int Simulator::runSimulation(Model* myModel, Set<RemoteSimulator*>* remoteSimula
 			remoteSim->tickRemoteSimulations(time);
 
 		 }
+
+		// Tick Migration Scheduler
+		// Inside tick, migrationScheduler checks Tasks vs CPUs and
+		// generates event if we need to migrate to remote.
+		//[migrate yes or no, 
+		//	boards to migrate to, 
+		//	task number/pointer to task] =
+		//		model->migrationScheduler->checkMigrate([board task
+		//						finished at,
+		//						task number] or
+		//						NULL);
+
+		// TODO:
+		// check for migration condition and migrate
 	}
 	return 1;
 }

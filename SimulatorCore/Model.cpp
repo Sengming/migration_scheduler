@@ -8,8 +8,27 @@ Model::Model()
 	ModelName = "simulationResults";
 	modelTaskHandler.initialize(TaskSet->createIterator(), TaskSet->createAvailableTasksIterator());
 }
-Model::Model(std::string modelName, Set<Task*>* modelTaskSet, Scheduler* modelScheduler, double modelRunTime)
+
+// Overload constructor for local model
+Model::Model(std::string modelName, Set<Task*>* modelTaskSet, Scheduler*
+	     modelScheduler, double modelRunTime)
 {
+	m_migration_scheduler = NULL;
+	ModelName = modelName;
+	scheduler = modelScheduler;
+	setTaskSet(modelTaskSet);
+	RunTime = modelRunTime;
+	ContextSwitch = 0;
+	TimeInterval = 1;
+	modelTaskHandler.initialize(TaskSet->createIterator(), TaskSet->createAvailableTasksIterator());
+
+}
+
+// Overload constructor for remote model
+Model::Model(std::string modelName, Set<Task*>* modelTaskSet, Scheduler*
+	     modelScheduler, double modelRunTime, MigrationScheduler* mig_scheduler)
+{
+	m_migration_scheduler = mig_scheduler;
 	ModelName = modelName;
 	scheduler = modelScheduler;
 	setTaskSet(modelTaskSet);

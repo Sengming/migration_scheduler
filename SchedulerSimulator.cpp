@@ -39,6 +39,8 @@ int main()
 	FIFO SchedulerFIFO;
 	EDF SchedulerEDF[5];
 
+
+
 	int runtime = 200;
 
 	//For MANUALLY creating tasks:
@@ -57,22 +59,26 @@ int main()
 
 	Set <RemoteSimulator*> remoteSimulators;
 
-	//Create models and simulators
-	Model localModel("LocalModel", &myTasks, &SchedulerFIFO, runtime);
+	// Instantiate migration scheduler
+	MigrationScheduler migrationScheduler(myTasks, 5);
 
+	//Create models and simulators
+	Model localModel("LocalModel", &myTasks, &SchedulerFIFO, runtime,
+			 &migrationScheduler);
 
 	Model remoteModel0("RemoteModel", &remoteTasks[0], &SchedulerEDF[0], runtime);
 	Model remoteModel1("RemoteModel", &remoteTasks[1], &SchedulerEDF[1], runtime);
 	Model remoteModel2("RemoteModel", &remoteTasks[2], &SchedulerEDF[2], runtime);
 	Model remoteModel3("RemoteModel", &remoteTasks[3], &SchedulerEDF[3], runtime);
 	Model remoteModel4("RemoteModel", &remoteTasks[4], &SchedulerEDF[4], runtime);
-	
+
+	// Add to list of remote models
 	remoteModels.addItem(&remoteModel0);
 	remoteModels.addItem(&remoteModel1);
 	remoteModels.addItem(&remoteModel2);
 	remoteModels.addItem(&remoteModel3);
 	remoteModels.addItem(&remoteModel4);
-	
+
 	RemoteSimulator remoteSimulator0(&remoteModel0);
 	RemoteSimulator remoteSimulator1(&remoteModel1);
 	RemoteSimulator remoteSimulator2(&remoteModel2);

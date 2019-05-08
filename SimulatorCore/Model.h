@@ -29,7 +29,7 @@ class Model
 private:
 	Set<Task*>* TaskSet;
 	Scheduler* scheduler;
-
+	MigrationScheduler m_migration_scheduler;
 	double RunTime;
 	double TimeInterval;
 	double ContextSwitch;
