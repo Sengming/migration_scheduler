@@ -30,6 +30,23 @@ Task::Task(int id, double tarrival, double deadline, double executiontime, doubl
 	DeadlineMissed = false;
 }
 
+Task::Task(int id, double tarrival, double deadline, double executiontime, double period, unsigned memoryusage = 2){
+	FirstTarrival = tarrival;
+	Tarrival = tarrival;
+	Deadline = deadline;
+	Priority = 0;
+	State = IDLE;
+	ExecutionTime = executiontime;
+	ID = id;
+	Period = period;
+	Progression = 0.0;
+	Tstarted = 0.0;
+	DeadlineMissed = false;
+	MemoryUsage = memoryusage;
+
+}
+
+
 Task::Task(int id)
 {
 	FirstTarrival = 0.0;
