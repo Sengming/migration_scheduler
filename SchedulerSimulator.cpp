@@ -46,9 +46,9 @@ int main()
 
 	//For MANUALLY creating tasks:
 	//Create a Task Set:
-	Task a(1, 0, 100, 24, 100);
-	Task b(2, 0, 80, 20, 80);
-	Task c(3, 0, 60, 20, 60);
+	Task a(1, 0, 100, 24, 72, 100);
+	Task b(2, 0, 80, 20, 60, 80);
+	Task c(3, 0, 60, 20, 60, 60);
 
 	Set<Task*> myTasks;
 	myTasks.addItem(&a);

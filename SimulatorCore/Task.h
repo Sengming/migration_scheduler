@@ -37,6 +37,7 @@ class Task
 	friend class Simulator;
 private:
 	double ExecutionTime;
+	double ExecutionTimeExchangeRate;
 	double Progression;
 	double Tarrival;
 	double FirstTarrival;
@@ -54,8 +55,8 @@ private:
 
 public:
 	Task();
-	Task(int id, double tarrival, double deadline, double executiontime, double period);  
-        Task(int id, double tarrival, double deadline, double executiontime, double period, unsigned memoryusage);
+	Task(int id, double tarrival, double deadline, double executiontimehost, double executiontimeremote, double period);  
+        Task(int id, double tarrival, double deadline, double executiontimehost, double executiontimeremote, double period, unsigned memoryusage);
 	Task(int id);
 	~Task();
 
@@ -69,4 +70,6 @@ public:
 	double getExecutionTime();
 	double getRemainingExecutionTime();
 	unsigned get_memory_usage();
+	void updateExecutionTimeForRemote();
+
 };
