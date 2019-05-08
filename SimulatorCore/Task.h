@@ -43,6 +43,7 @@ private:
 	double Tstarted;
 	double Deadline;
 	double Period;
+	unsigned MemoryUsage;
 
 	int State;
 	int ID;
@@ -53,7 +54,8 @@ private:
 
 public:
 	Task();
-	Task(int id, double tarrival, double deadline, double executiontime, double period);
+	Task(int id, double tarrival, double deadline, double executiontime, double period);  
+        Task(int id, double tarrival, double deadline, double executiontime, double period, unsigned memoryusage=2);
 	Task(int id);
 	~Task();
 
