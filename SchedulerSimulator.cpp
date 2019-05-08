@@ -5,6 +5,7 @@
 #include"SimulatorCore/Model.h"
 #include "SimulatorCore/Simulator.h"
 #include "SimulatorCore/RemoteSimulator.h"
+#include "SimulatorCore/MigrationScheduler.h"
 
 //Include Schedulers here
 #include"Schedulers/RM.h"
@@ -60,7 +61,7 @@ int main()
 	Set <RemoteSimulator*> remoteSimulators;
 
 	// Instantiate migration scheduler
-	MigrationScheduler migrationScheduler(myTasks, 5);
+	MigrationScheduler migrationScheduler(&myTasks, 5);
 
 	//Create models and simulators
 	Model localModel("LocalModel", &myTasks, &SchedulerFIFO, runtime,

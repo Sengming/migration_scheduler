@@ -20,7 +20,7 @@ ModelName: The name of the model, naming the result report.
 
 modelTaskHandler: A handler for the task set, updating tasks, etc.
 *************************************************************************/
-
+class MigrationScheduler;
 
 class Model
 {
@@ -29,7 +29,7 @@ class Model
 private:
 	Set<Task*>* TaskSet;
 	Scheduler* scheduler;
-	MigrationScheduler m_migration_scheduler;
+	MigrationScheduler* m_migration_scheduler;
 	double RunTime;
 	double TimeInterval;
 	double ContextSwitch;
@@ -40,6 +40,7 @@ public:
 	Model();
 	Model(std::string modelName, Set<Task*>* modelTaskSet, Scheduler* modelScheduler, double modelRunTime);
 	Model(std::string modelName, int numberOfPeriodicTasks, int numberOfAperiodicTask, Scheduler* modelScheduler);
+	Model(std::string modelName, Set<Task*>* modelTaskSet, Scheduler* modelScheduler, double modelRunTime, MigrationScheduler* mig_scheduler);
 	~Model();
 
 	bool isTaskSetEmpty();
@@ -51,6 +52,6 @@ public:
 	void setRunTime(double time);
 
 	void addToTaskSet(Task* task);
-	void removeFromTaskSet(Task* task);
+	bool removeFromTaskSet(Task* task);
 };
 

@@ -1,5 +1,6 @@
 #include "Simulator.h"
 #include "RemoteSimulator.h"
+#include "MigrationScheduler.h"
 
 int Simulator::runSimulation(Model* myModel, Set<RemoteSimulator*>* remoteSimulators)
 {
@@ -33,11 +34,8 @@ int Simulator::runSimulation(Model* myModel, Set<RemoteSimulator*>* remoteSimula
 	//Create Final Event
 	Event last(SimulationFinished, runTime);
 
-	Event migration(MigrateToRemote, 0);
-
 	//Insert Events in EventQueue
 	eventQueue.addItem(&first);
-	eventQueue.addItem(&migration);
 	eventQueue.addItem(&last);
 
 
@@ -88,16 +86,14 @@ int Simulator::runSimulation(Model* myModel, Set<RemoteSimulator*>* remoteSimula
 		// Tick Migration Scheduler
 		// Inside tick, migrationScheduler checks Tasks vs CPUs and
 		// generates event if we need to migrate to remote.
-		//[migrate yes or no, 
-		//	boards to migrate to, 
-		//	task number/pointer to task] =
-		//		model->migrationScheduler->checkMigrate([board task
-		//						finished at,
-		//						task number] or
-		//						NULL);
 
-		// TODO:
-		// check for migration condition and migrate
+		MigrationInstruction migInstruction =
+				simModel->m_migration_scheduler->checkMigrate(&m_migQueue);
+
+		// If we need to migrate, add to remove taskset
+		if (migInstruction.migrate == true) {
+				addToRemoteTaskSet(migInstruction.simulatorTarget, migInstruction.migratedTask);
+		}
 	}
 	return 1;
 }
@@ -245,7 +241,9 @@ void Simulator::onMigrateToRemote(double time)
 void Simulator::addToRemoteTaskSet(int simulatorNumber, Task* task)
 {
 	RemoteSimulator* remoteSim = m_remoteSimulators->getItem(simulatorNumber);
-	remoteSim->addToTaskSet(task);
+	// Successfully removed from original task set and added to remote task set, else do nothing
+	if (simModel->removeFromTaskSet(task))
+		remoteSim->addToTaskSet(task);
 }
 
 void Simulator::resetSimulator()

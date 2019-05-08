@@ -1,5 +1,6 @@
 #include "Model.h"
 
+
 Model::Model()
 {
 	TimeInterval = 1;
@@ -36,7 +37,6 @@ Model::Model(std::string modelName, Set<Task*>* modelTaskSet, Scheduler*
 	ContextSwitch = 0;
 	TimeInterval = 1;
 	modelTaskHandler.initialize(TaskSet->createIterator(), TaskSet->createAvailableTasksIterator());
-
 }
 
 Model::Model(std::string modelName, int numberOfPeriodicTasks, int numberOfAperiodicTask, Scheduler* modelScheduler)
@@ -105,7 +105,7 @@ void Model::addToTaskSet(Task* task)
 	TaskSet->addItem(task);
 }
 
-void Model::removeFromTaskSet(Task* task)
+bool Model::removeFromTaskSet(Task* task)
 {
-	TaskSet->remove(task);
+	return TaskSet->remove(task);
 }

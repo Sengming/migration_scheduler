@@ -3,6 +3,7 @@
 #include"Event.h"
 #include"Model.h"
 #include"../Containers/Queue.h"
+#include "MigrationScheduler.h"
 
 class RemoteSimulator;
 
@@ -37,6 +38,7 @@ protected:
 
 	Queue<Event*> eventQueue;
 
+	Queue<MigrationEvent*> m_migQueue;
 	//Simulation parameters
 	bool preemptive;
 	double timeInterrupt;

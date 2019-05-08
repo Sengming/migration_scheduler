@@ -12,7 +12,7 @@ class AbstractContainer
 public:
 	virtual AbstractIterator<Item>* createIterator() = 0;
 	virtual void addItem(Item a) = 0;
-	virtual void remove(Item a) = 0;
+	virtual bool remove(Item a) = 0;
 	virtual long numberOfItems() = 0;
 	virtual Item getItem(long index) = 0;
 };

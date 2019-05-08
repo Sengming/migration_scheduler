@@ -42,7 +42,7 @@ public:
 	AbstractIterator<Item>* createIterator();
 	void addItem(Item a);
 	long numberOfItems();
-	void remove(Item a);
+	bool remove(Item a);
 	Item getItem(long index);
 	void sortQueue();
 	void emptyQueue();
@@ -74,9 +74,11 @@ long Queue<Item>::numberOfItems()
 }
 
 template<class Item>
-void Queue<Item>::remove(Item a)
+bool Queue<Item>::remove(Item a)
 {
+	bool retVal = true;
 	myItems.remove(a);
+	return retVal;
 }
 
 template<class Item>

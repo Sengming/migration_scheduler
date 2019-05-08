@@ -34,7 +34,7 @@ private:
 public:
 	void addItem(Item a);
 	long numberOfItems();
-	void remove(Item a);
+	bool remove(Item a);
 	Item getItem(long index);
 	AbstractIterator<Item>* createIterator();
 	AbstractIterator<Item>* createAvailableTasksIterator();
@@ -61,11 +61,16 @@ long Set<Item>::numberOfItems()
 }
 
 template<class Item>
-void Set<Item>::remove(Item a)
-{
+bool Set<Item>::remove(Item a)
+{	
+	bool retVal = false;
 	typename std::vector<Item>::iterator itemIterator;
 	itemIterator = std::find(myItems.begin(), myItems.end(), a);
-	myItems.erase(itemIterator);
+	if (itemIterator != myItems.end()){
+		myItems.erase(itemIterator);
+		retVal = true;
+	}
+	return retVal;
 }
 
 template<class Item>
