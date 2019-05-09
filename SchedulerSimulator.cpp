@@ -29,10 +29,61 @@ manually and generated.
 *******************************************************************/
 
 
+const int MAX_TASK = 100;
 
+struct bench{
+	double tarrival;
+	double deadline;
+	double executiontimehost;
+	double executiontimeremote;
+	double period;
+	unsigned memoryusage;
+};
 
+struct bench EP{
+	.tarrival = 0,
+	.deadline = 60,
+	.executiontimehost = 133.06,
+	.executiontimeremote = 303.90,
+	.period = 60,
+	.memoryusage = 0
+};
 
+struct bench CG{
+	.tarrival = 0,
+	.deadline = 60,
+	.executiontimehost = 90.00,
+	.executiontimeremote = 2678.16,
+	.period = 60,
+	.memoryusage = 0
+};
 
+struct bench LU{
+	.tarrival = 0,
+	.deadline = 60,
+	.executiontimehost = 120.28,
+	.executiontimeremote = 1538.78,
+	.period = 60,
+	.memoryusage = 0
+};
+
+struct bench UA{
+	.tarrival = 0,
+	.deadline = 60,
+	.executiontimehost = 74.46,
+	.executiontimeremote = 768.67,
+	.period = 60,
+	.memoryusage = 0
+};
+
+struct bench Kmeans{
+	.tarrival = 0,
+	.deadline = 60,
+	.executiontimehost = 20,
+	.executiontimeremote = 60,
+	.period = 60,
+	.memoryusage = 0
+};
 
 int main()
 {
@@ -40,20 +91,52 @@ int main()
 	FIFO SchedulerFIFO;
 	EDF SchedulerEDF[5];
 
-
-
 	int runtime = 200;
+	int totalTasks = 10;
+	int taskSet = 0;
 
-	//For MANUALLY creating tasks:
-	//Create a Task Set:
-	Task a(1, 0, 100, 24, 72, 100);
-	Task b(2, 0, 80, 20, 60, 80);
-	Task c(3, 0, 60, 20, 60, 60);
 
+	Task *tasks[MAX_TASK];
 	Set<Task*> myTasks;
-	myTasks.addItem(&a);
-	myTasks.addItem(&b);
-	myTasks.addItem(&c);
+
+	for(int i=0; i<totalTasks; i++)
+	{
+		switch(taskSet)
+		{
+			case 0:
+				tasks[i] = new Task(i+1, EP.tarrival, EP.deadline, EP.executiontimehost, EP.executiontimeremote, EP.period, EP.memoryusage);
+				myTasks.addItem(tasks[i]);
+				break;
+
+			case 1:
+				tasks[i] = new Task(i+1, CG.tarrival, CG.deadline, CG.executiontimehost, CG.executiontimeremote, CG.period, CG.memoryusage);
+				myTasks.addItem(tasks[i]);
+				break;
+
+			case 2:
+				tasks[i] = new Task(i+1, EP.tarrival, EP.deadline, EP.executiontimehost, EP.executiontimeremote, EP.period, EP.memoryusage);
+				myTasks.addItem(tasks[i++]);
+				tasks[i] = new Task(i+1, CG.tarrival, CG.deadline, CG.executiontimehost, CG.executiontimeremote, CG.period, CG.memoryusage);
+				myTasks.addItem(tasks[i]);
+				break;
+
+			case 3:
+				tasks[i] = new Task(i+1, EP.tarrival, EP.deadline, EP.executiontimehost, EP.executiontimeremote, EP.period, EP.memoryusage);
+				myTasks.addItem(tasks[i++]);
+				tasks[i] = new Task(i+1, CG.tarrival, CG.deadline, CG.executiontimehost, CG.executiontimeremote, CG.period, CG.memoryusage);
+				myTasks.addItem(tasks[i++]);
+				tasks[i] = new Task(i+1, UA.tarrival, UA.deadline, UA.executiontimehost, UA.executiontimeremote, UA.period, UA.memoryusage);
+				myTasks.addItem(tasks[i++]);
+				tasks[i] = new Task(i+1, LU.tarrival, LU.deadline, LU.executiontimehost, LU.executiontimeremote, LU.period, LU.memoryusage);
+//				myTasks.addItem(tasks[i++]);
+//				tasks[i] = new Task(i+1, Kmeans.tarrival, Kmeans.deadline, Kmeans.executiontimehost, Kmeans.executiontimeremote, Kmeans.period, Kmeans.memoryusage);
+				myTasks.addItem(tasks[i]);
+				break;
+
+			default:
+				break;
+		}
+	}
 
 	Set<Task*> remoteTasks[5];
 	Set<Model*> remoteModels;
@@ -97,6 +180,9 @@ int main()
 
 	//Run simulations
 	mySimulator.runSimulation(&localModel, &remoteSimulators);
+
+	for(int i=0; i<totalTasks; i++)
+		free(tasks[i]);
 }
 
 
