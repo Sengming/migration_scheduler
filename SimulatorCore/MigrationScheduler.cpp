@@ -78,6 +78,9 @@ unsigned MigrationScheduler::update_board_info(Board brd, unsigned memory){
 
 // }
 
+// TODO for Sefat: Remove this and replace with your migration scheduler.
+// Inputs to this function: Pointer to the Queue of migration events, if there are events, handle them, else if empty do nothing.
+// Outputs expected, either MigrationInstruction with {false, 0, NULL} or if we wish to migrate, MigrationInstruction with {true, processor, Task*}
 MigrationInstruction MigrationScheduler::checkMigrate(Queue<MigrationEvent*>* events){
   //MigrationInstruction migInstruction = {false, 0, NULL};
   static Task* firstTask = m_localTasks->getItem(0);

@@ -64,6 +64,7 @@ int Simulator::runSimulation(Model* myModel, Set<RemoteSimulator*>* remoteSimula
 			break;
 		case TaskFinished:
 			onTaskFinished(time);
+			std::cout << "Task Finished on Server: " << currentTask->getID() << std::endl;
 			break;
 		case SimulationFinished:
 			onSimulationFinished(time);
@@ -87,6 +88,7 @@ int Simulator::runSimulation(Model* myModel, Set<RemoteSimulator*>* remoteSimula
 
 		// If we need to migrate, add to remove taskset
 		if (migInstruction.migrate == true) {
+				migInstruction.migratedTask->updateExecutionTimeForRemote();
 				addToRemoteTaskSet(migInstruction.simulatorTarget, migInstruction.migratedTask);
 		}
 	}
@@ -201,6 +203,7 @@ void Simulator::setUpTaskForExecution(double time)
 void Simulator::onTaskReady(double time)
 {
 	runScheduler(time);
+	std::cout << "Task scheduled on Server: " << currentTask->getID() << std::endl;
 }
 
 void Simulator::onTaskFinished(double time)
@@ -233,7 +236,7 @@ void Simulator::addToRemoteTaskSet(int simulatorNumber, Task* task)
 	// Successfully removed from original task set and added to remote task set, else do nothing
 	if (simModel->removeFromTaskSet(task)){
 		remoteSim->addToTaskSet(task);
-		std::cout << "Add to task set" << std::endl;
+		std::cout << "Task " << task->getID() << " added to remote node: " << simulatorNumber << std::endl;
 	}
 }
 
