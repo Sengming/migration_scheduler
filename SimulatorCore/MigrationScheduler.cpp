@@ -82,10 +82,17 @@ unsigned MigrationScheduler::update_board_info(Board brd, unsigned memory){
 // Inputs to this function: Pointer to the Queue of migration events, if there are events, handle them, else if empty do nothing.
 // Outputs expected, either MigrationInstruction with {false, 0, NULL} or if we wish to migrate, MigrationInstruction with {true, processor, Task*}
 MigrationInstruction MigrationScheduler::checkMigrate(Queue<MigrationEvent*>* events){
-  //MigrationInstruction migInstruction = {false, 0, NULL};
+  MigrationInstruction migZeroInstruction = {false, 0, NULL};
+  static int test = 0;
   static Task* firstTask = m_localTasks->getItem(0);
-  MigrationInstruction migInstruction = {true, 1, firstTask};
-  return migInstruction;
+  MigrationInstruction migYesInstruction = {true, 1, firstTask};
+  ++test;
+  // This makes us send yes migrate once, then no migration afterwards
+  if (test == 30) {
+      return migYesInstruction;
+  }
+  else
+    return migZeroInstruction;
 }
 
 unsigned MigrationScheduler::__migrate(Task proc, Board brd){

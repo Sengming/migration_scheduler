@@ -92,7 +92,7 @@ double Task::getExecutionTime()
 }
 
 double Task::getRemainingExecutionTime()
-{
+{	
 	return (ExecutionTime - Progression);
 }
 

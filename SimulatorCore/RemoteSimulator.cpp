@@ -29,12 +29,12 @@ int RemoteSimulator::tickRemoteSimulations(int time)
 	simModel->modelTaskHandler.checkForDeadlineBreaches(&logMonitor, time);
 
 	currentEvent = NextEvent->getEventType();
-	// We check for overload here
+
 	//Handle current Event.
 	switch (currentEvent)
 	{
 	case TimeInterrupt:
-		std::cout << "Remote Time interrupt " << time << std::endl;
+		std::cout << "Remote Node " << myId <<" Time interrupt " << time << std::endl;
 		onTimeInterrupt(time);
 		break;
 	case TaskReady:
@@ -43,7 +43,8 @@ int RemoteSimulator::tickRemoteSimulations(int time)
 		break;
 	case TaskFinished:
 		//std::cout << "Task Finished " << time << " " << currentTask <<" Progression: " << currentTask->ExecutionTime << std::endl;
-		std::cout << "Task on Remote Node " << myId << " completed: " << currentTask->getID() << " ExecutionTime: " << currentTask->ExecutionTime << std::endl;
+		currentTask->updateProgressionTime(time);
+		std::cout << "Task on Remote Node " << myId << " completed: " << currentTask->getID() << " Progression: " << currentTask->Progression << std::endl;
 		onTaskFinished(time);
 		break;
 	default:

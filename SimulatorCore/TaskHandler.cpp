@@ -1,6 +1,6 @@
 #include "TaskHandler.h"
 #include <random>
-
+#include <iostream>
 
 TaskHandler::TaskHandler()
 {
@@ -157,6 +157,7 @@ void TaskHandler::checkForDeadlineBreaches(Monitor* myMonitor, double time)
 			{
 				//Deadline missed!
 				//myMonitor->logDeadlineBreach(*tempTask, (tempTask->getTarrival() + tempTask->getDeadline()));
+				std::cout << "Deadline breach detected for task: " << tempTask->getID()<< std::endl;
 				tempTask->DeadlineMissed = true;
 			}
 		}

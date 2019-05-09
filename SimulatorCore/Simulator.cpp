@@ -61,6 +61,7 @@ int Simulator::runSimulation(Model* myModel, Set<RemoteSimulator*>* remoteSimula
 			break;
 		case TaskReady:
 			onTaskReady(time);
+			std::cout << "Task scheduled on Server: " << currentTask->getID() << std::endl;
 			break;
 		case TaskFinished:
 			onTaskFinished(time);
@@ -86,9 +87,15 @@ int Simulator::runSimulation(Model* myModel, Set<RemoteSimulator*>* remoteSimula
 		MigrationInstruction migInstruction =
 				simModel->m_migration_scheduler->checkMigrate(&m_migQueue);
 
-		// If we need to migrate, add to remove taskset
+		// If we need to migrate, add to remote taskset
 		if (migInstruction.migrate == true) {
+				eventQueue.remove(currentTaskFinishedEvent);
+				currentTask->State = READY;
+				static Event readyTask(TaskReady, time);
+				readyTask.setEventTime(time);
+				eventQueue.addItem(&readyTask);
 				migInstruction.migratedTask->updateExecutionTimeForRemote();
+				migInstruction.migratedTask->updateProgressionTime(time);
 				addToRemoteTaskSet(migInstruction.simulatorTarget, migInstruction.migratedTask);
 		}
 	}
@@ -182,6 +189,7 @@ void Simulator::runScheduler(double time)
 	if (currentEvent == TaskReady || time == 0)
 	{
 		currentTask = nextTask;
+		std::cout << "Started Execution for Task: " << currentTask->getID() << std::endl;
 		setUpTaskForExecution(time);
 	}
 
@@ -203,7 +211,6 @@ void Simulator::setUpTaskForExecution(double time)
 void Simulator::onTaskReady(double time)
 {
 	runScheduler(time);
-	std::cout << "Task scheduled on Server: " << currentTask->getID() << std::endl;
 }
 
 void Simulator::onTaskFinished(double time)
