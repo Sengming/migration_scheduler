@@ -48,10 +48,8 @@ protected:
 	//Event-handeling functions:
 	void onTimeInterrupt(double time);
 	void onTaskReady(double time);
-	void onTaskFinished(double time);
+	virtual void onTaskFinished(double time);
 	void onSimulationFinished(double time);
-
-	void onMigrateToRemote(double time);
 
 	void runScheduler(double time);
 	void setUpTaskForExecution(double time);

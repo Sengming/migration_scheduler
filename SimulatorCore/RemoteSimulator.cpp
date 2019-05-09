@@ -38,11 +38,11 @@ int RemoteSimulator::tickRemoteSimulations(int time)
 		onTimeInterrupt(time);
 		break;
 	case TaskReady:
-		std::cout << "Task Ready " << time << std::endl;
+		std::cout << "Task Ready " << time << " " << currentTask << " Progression: " << currentTask->ExecutionTime << std::endl;
 		onTaskReady(time);
 		break;
 	case TaskFinished:
-		std::cout << "Task Finished " << time << std::endl;
+		std::cout << "Task Finished " << time << " " << currentTask <<" Progression: " << currentTask->ExecutionTime << std::endl;
 		onTaskFinished(time);
 		break;
 	default:
@@ -51,17 +51,32 @@ int RemoteSimulator::tickRemoteSimulations(int time)
 
 	return 1;
 }
-void RemoteSimulator::initializeRemoteSim()
+void RemoteSimulator::initializeRemoteSim(Queue<MigrationEvent*>* migrationQueue)
 {
 	simModel->scheduler->setTasks(simModel->TaskSet);
 	//Create First Event
 	Event* first = new Event(TimeInterrupt, 0);
 	eventQueue.addItem(first);
+
+	// Initialize our pointer to the main simulator's migrationQueue
+	m_migQueue = migrationQueue;
 }
 
-RemoteSimulator::RemoteSimulator(Model* model) : Simulator()
+void RemoteSimulator::onTaskFinished(double time)
+{
+	// Run base class' method first
+	Simulator::onTaskFinished(time);
+	simModel->removeFromTaskSet(currentTask);
+	MigrationEvent* event = new MigrationEvent();
+	event->remoteComplete = myId;
+	event->taskComplete = currentTask;
+	m_migQueue->addItem(event);
+}
+
+RemoteSimulator::RemoteSimulator(Model* model, unsigned id) : Simulator()
 {
 	simModel = model;
+	myId = id;
 }
 
 void RemoteSimulator::addToTaskSet(Task* task)

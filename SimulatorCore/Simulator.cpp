@@ -25,7 +25,7 @@ int Simulator::runSimulation(Model* myModel, Set<RemoteSimulator*>* remoteSimula
 	// Remote Sim Set individual scheduler tasks
 	for(remoteSimIterator->First(); !remoteSimIterator->IsDone(); remoteSimIterator->Next()){
 		RemoteSimulator* remoteSim = remoteSimIterator->CurrentItem();
-		remoteSim->initializeRemoteSim();
+		remoteSim->initializeRemoteSim(&m_migQueue);
 	}
 
 	//Create First Event
@@ -68,11 +68,6 @@ int Simulator::runSimulation(Model* myModel, Set<RemoteSimulator*>* remoteSimula
 		case SimulationFinished:
 			onSimulationFinished(time);
 			break;
-		//case MigrateToRemote:
-		//	onMigrateToRemote(time);
-		//	break;
-		//case RemoteComplete:
-		//	break;
 		default:
 			break;
 		}
@@ -227,23 +222,19 @@ void Simulator::onSimulationFinished(double time)
 	{
 		logMonitor.logEnd(*currentTask, time);
 	}
-	logMonitor.logSimEnd(time);
-	logMonitor.generateReport();
+	//logMonitor.logSimEnd(time);
+	//logMonitor.generateReport();
 	resetSimulator();
-}
-
-void Simulator::onMigrateToRemote(double time)
-{
-	// TODO: Change to link to migartionscheduler:
-	addToRemoteTaskSet(0, currentTask);
 }
 
 void Simulator::addToRemoteTaskSet(int simulatorNumber, Task* task)
 {
 	RemoteSimulator* remoteSim = m_remoteSimulators->getItem(simulatorNumber);
 	// Successfully removed from original task set and added to remote task set, else do nothing
-	if (simModel->removeFromTaskSet(task))
+	if (simModel->removeFromTaskSet(task)){
 		remoteSim->addToTaskSet(task);
+		std::cout << "Add to task set" << std::endl;
+	}
 }
 
 void Simulator::resetSimulator()

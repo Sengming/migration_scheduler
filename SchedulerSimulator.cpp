@@ -80,11 +80,11 @@ int main()
 	remoteModels.addItem(&remoteModel3);
 	remoteModels.addItem(&remoteModel4);
 
-	RemoteSimulator remoteSimulator0(&remoteModel0);
-	RemoteSimulator remoteSimulator1(&remoteModel1);
-	RemoteSimulator remoteSimulator2(&remoteModel2);
-	RemoteSimulator remoteSimulator3(&remoteModel3);
-	RemoteSimulator remoteSimulator4(&remoteModel4);
+	RemoteSimulator remoteSimulator0(&remoteModel0, 0);
+	RemoteSimulator remoteSimulator1(&remoteModel1, 1);
+	RemoteSimulator remoteSimulator2(&remoteModel2, 2);
+	RemoteSimulator remoteSimulator3(&remoteModel3, 3);
+	RemoteSimulator remoteSimulator4(&remoteModel4, 4);
 
 	remoteSimulators.addItem(&remoteSimulator0);
 	remoteSimulators.addItem(&remoteSimulator1);

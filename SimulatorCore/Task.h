@@ -29,12 +29,15 @@ number, not shared with other tasks in the same task set.
 
 class TaskHandler;
 class Simulator;
+class RemoteSimulator;
+
 enum taskState{ IDLE, READY, RUNNING, WAITING, BLOCKED, FINISHED };
 
 class Task
 {
 	friend class TaskHandler;
 	friend class Simulator;
+	friend class RemoteSimulator;
 private:
 	double ExecutionTime;
 	double Progression;

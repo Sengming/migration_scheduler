@@ -5,6 +5,7 @@
 #include"../Containers/Queue.h"
 #include "Simulator.h"
 
+class MigrationEvent;
 /*************************************************************
 The Simulator conducts the simulation of the behavior of a 
 processor executing a task set using a scheduler policy.
@@ -21,11 +22,16 @@ calls on different functions to handle the event.
 class RemoteSimulator : public Simulator
 {
 public:
-	RemoteSimulator(Model* model);
+	RemoteSimulator(Model* model, unsigned id);
 	~RemoteSimulator();
 	void addToTaskSet(Task* task);
 	int tickRemoteSimulations(int time);
-	void initializeRemoteSim();
+	void initializeRemoteSim(Queue<MigrationEvent*>* migrationQueue);
+	virtual void onTaskFinished(double time);
 	virtual int runSimulation(Model* myModel, Set<RemoteSimulator*>* remoteSimulators);
+
+protected:
+	Queue<MigrationEvent*>* m_migQueue;
+	unsigned myId;
 };
 
