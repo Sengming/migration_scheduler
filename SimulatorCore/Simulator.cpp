@@ -2,11 +2,13 @@
 #include "RemoteSimulator.h"
 #include "MigrationScheduler.h"
 
-int Simulator::runSimulation(Model* myModel, Set<RemoteSimulator*>* remoteSimulators)
+unsigned Simulator::s_totalExecutionTime = 0;
+
+int Simulator::runSimulation(Model *myModel, Set<RemoteSimulator *> *remoteSimulators)
 {
 	//Initialization
-	AbstractIterator<Event*>* eventIterator = eventQueue.createIterator();
-	AbstractIterator<RemoteSimulator*>* remoteSimIterator = remoteSimulators->createIterator();
+	AbstractIterator<Event *> *eventIterator = eventQueue.createIterator();
+	AbstractIterator<RemoteSimulator *> *remoteSimIterator = remoteSimulators->createIterator();
 
 	simModel = myModel;
 	runTime = simModel->RunTime;
@@ -20,11 +22,12 @@ int Simulator::runSimulation(Model* myModel, Set<RemoteSimulator*>* remoteSimula
 	logMonitor.logTasks(*(simModel->TaskSet));
 
 	double time = 0;
-	Event* NextEvent;
+	Event *NextEvent;
 
 	// Remote Sim Set individual scheduler tasks
-	for(remoteSimIterator->First(); !remoteSimIterator->IsDone(); remoteSimIterator->Next()){
-		RemoteSimulator* remoteSim = remoteSimIterator->CurrentItem();
+	for (remoteSimIterator->First(); !remoteSimIterator->IsDone(); remoteSimIterator->Next())
+	{
+		RemoteSimulator *remoteSim = remoteSimIterator->CurrentItem();
 		remoteSim->initializeRemoteSim(&m_migQueue);
 	}
 
@@ -37,7 +40,6 @@ int Simulator::runSimulation(Model* myModel, Set<RemoteSimulator*>* remoteSimula
 	//Insert Events in EventQueue
 	eventQueue.addItem(&first);
 	eventQueue.addItem(&last);
-
 
 	while (time < runTime)
 	{
@@ -61,11 +63,12 @@ int Simulator::runSimulation(Model* myModel, Set<RemoteSimulator*>* remoteSimula
 			break;
 		case TaskReady:
 			onTaskReady(time);
-			std::cout << "Task scheduled on Server: " << currentTask->getID() << std::endl;
+			// std::cout << "Task scheduled on Server: " << currentTask->getID() << std::endl;
 			break;
 		case TaskFinished:
 			onTaskFinished(time);
-			std::cout << "Task Finished on Server: " << currentTask->getID() << std::endl;
+			std::cout << "[" << time << "]"
+					  << "Task Finished on Server: " << currentTask->getID() << std::endl;
 			break;
 		case SimulationFinished:
 			onSimulationFinished(time);
@@ -74,31 +77,33 @@ int Simulator::runSimulation(Model* myModel, Set<RemoteSimulator*>* remoteSimula
 			break;
 		}
 		// Tick all remote simulations
-		for(remoteSimIterator->First(); !remoteSimIterator->IsDone(); remoteSimIterator->Next()){
-			RemoteSimulator* remoteSim = remoteSimIterator->CurrentItem();
+		for (remoteSimIterator->First(); !remoteSimIterator->IsDone(); remoteSimIterator->Next())
+		{
+			RemoteSimulator *remoteSim = remoteSimIterator->CurrentItem();
 			remoteSim->tickRemoteSimulations(time);
-
-		 }
+		}
 
 		// Tick Migration Scheduler
 		// Inside tick, migrationScheduler checks Tasks vs CPUs and
 		// generates event if we need to migrate to remote.
 
 		MigrationInstruction migInstruction =
-				simModel->m_migration_scheduler->checkMigrate(&m_migQueue);
+			simModel->m_migration_scheduler->checkMigrate(&m_migQueue);
 
 		// If we need to migrate, add to remote taskset
-		if (migInstruction.migrate == true) {
-				eventQueue.remove(currentTaskFinishedEvent);
-				currentTask->State = READY;
-				static Event readyTask(TaskReady, time);
-				readyTask.setEventTime(time);
-				eventQueue.addItem(&readyTask);
-				migInstruction.migratedTask->updateExecutionTimeForRemote();
-				migInstruction.migratedTask->updateProgressionTime(time);
-				addToRemoteTaskSet(migInstruction.simulatorTarget, migInstruction.migratedTask);
+		if (migInstruction.migrate == true)
+		{
+			eventQueue.remove(currentTaskFinishedEvent);
+			currentTask->State = READY;
+			static Event readyTask(TaskReady, time);
+			readyTask.setEventTime(time);
+			eventQueue.addItem(&readyTask);
+			migInstruction.migratedTask->updateExecutionTimeForRemote();
+			migInstruction.migratedTask->updateProgressionTime(time);
+			addToRemoteTaskSet(migInstruction.simulatorTarget, migInstruction.migratedTask, time);
 		}
 	}
+	std::cout << "Total Execution time of all tasks: " << Simulator::s_totalExecutionTime << std::endl;
 	return 1;
 }
 
@@ -106,7 +111,6 @@ Simulator::Simulator()
 {
 	currentTask = new Task;
 }
-
 
 Simulator::~Simulator()
 {
@@ -127,10 +131,11 @@ void Simulator::onTimeInterrupt(double time)
 
 void Simulator::runScheduler(double time)
 {
-	Task* nextTask(0);
+	Task *nextTask(0);
 
 	// If task set is empty we don't want to schedule
-	if (simModel->isTaskSetEmpty()){
+	if (simModel->isTaskSetEmpty())
+	{
 		return;
 	}
 
@@ -162,7 +167,7 @@ void Simulator::runScheduler(double time)
 		return;
 	}
 
-	//If a different task is currently being handled, this task must delete its job finished event. 
+	//If a different task is currently being handled, this task must delete its job finished event.
 	if (currentEvent == TimeInterrupt && time != 0)
 	{
 		if (nextTask->getID() != currentTask->getID() || nextTask->getState() == READY)
@@ -189,10 +194,10 @@ void Simulator::runScheduler(double time)
 	if (currentEvent == TaskReady || time == 0)
 	{
 		currentTask = nextTask;
-		std::cout << "Started Execution for Task: " << currentTask->getID() << std::endl;
+		std::cout << "[" << time << "]"
+				  << "Started Execution for Task: " << currentTask->getID() << std::endl;
 		setUpTaskForExecution(time);
 	}
-
 }
 
 void Simulator::setUpTaskForExecution(double time)
@@ -216,17 +221,20 @@ void Simulator::onTaskReady(double time)
 void Simulator::onTaskFinished(double time)
 {
 	currentTask->State = FINISHED;
+	currentTask->updateProgressionTime(time);
+
+	Simulator::s_totalExecutionTime += currentTask->Progression;
+
 	static Event readyTask(TaskReady, time);
 	readyTask.setEventTime(time);
 	logMonitor.logEnd(*currentTask, time);
 	eventQueue.addItem(&readyTask);
 }
 
-
 void Simulator::onSimulationFinished(double time)
 {
 	eventQueue.sortQueue();
-	AbstractIterator<Event*>* it = eventQueue.createIterator();
+	AbstractIterator<Event *> *it = eventQueue.createIterator();
 	it->First();
 	if (it->CurrentItem()->getEventType() == TaskFinished && it->CurrentItem()->getEventTime() == time)
 	{
@@ -237,13 +245,15 @@ void Simulator::onSimulationFinished(double time)
 	resetSimulator();
 }
 
-void Simulator::addToRemoteTaskSet(int simulatorNumber, Task* task)
+void Simulator::addToRemoteTaskSet(int simulatorNumber, Task *task, int time)
 {
-	RemoteSimulator* remoteSim = m_remoteSimulators->getItem(simulatorNumber);
+	RemoteSimulator *remoteSim = m_remoteSimulators->getItem(simulatorNumber);
 	// Successfully removed from original task set and added to remote task set, else do nothing
-	if (simModel->removeFromTaskSet(task)){
+	if (simModel->removeFromTaskSet(task))
+	{
 		remoteSim->addToTaskSet(task);
-		std::cout << "Task " << task->getID() << " added to remote node: " << simulatorNumber << std::endl;
+		std::cout << "[" << time << "]"
+				  << "Task " << task->getID() << " added to remote node: " << simulatorNumber << std::endl;
 	}
 }
 

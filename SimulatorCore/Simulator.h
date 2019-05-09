@@ -26,7 +26,7 @@ private:
 	// Remote simulators
 	Set<RemoteSimulator*>* m_remoteSimulators;
 
-	void addToRemoteTaskSet(int simulatorNumber, Task* task);
+	void addToRemoteTaskSet(int simulatorNumber, Task* task, int time);
 
 protected:
 	Monitor logMonitor;
@@ -61,5 +61,7 @@ public:
 	~Simulator();
 	int runSimulation(Model* myModel, Set<RemoteSimulator*>* remoteSimulators);
 	Model* simModel;
+
+	static unsigned s_totalExecutionTime;
 };
 
