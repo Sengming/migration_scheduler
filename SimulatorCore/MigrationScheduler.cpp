@@ -144,7 +144,8 @@ MigrationInstruction MigrationScheduler::checkMigrate(Queue<MigrationEvent*>* ev
    //cout << "size of boards: "<< boards.size()<<endl;
    Board board_tosend = get_suitable_board(task_tosend->get_memory_usage());
    //cout << "Board  " << board_tosend.id << "\n";
-   //cout << "Finding out board!\n"; 
+   //cout << "Finding out board!\n";
+   task_tosend->updateExecutionTimeForRemote(); 
    MigrationInstruction migrateinstruction = {true, board_tosend.id, task_tosend};
    migratetoboard(*task_tosend, board_tosend);
    return migrateinstruction;
