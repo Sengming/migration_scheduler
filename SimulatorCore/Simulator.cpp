@@ -47,11 +47,11 @@ int Simulator::runSimulation(Model *myModel, Set<RemoteSimulator *> *remoteSimul
 		eventIterator->First();
 		NextEvent = eventIterator->CurrentItem();
 		eventQueue.remove(NextEvent);
-		time = NextEvent->getEventTime();
+		time = NextEvent->getEventTime(); 
 
 		//Update Tasks, and check for deadline misses.
 		simModel->modelTaskHandler.updateTaskStates(&logMonitor, time);
-		simModel->modelTaskHandler.checkForDeadlineBreaches(&logMonitor, time);
+		//simModel->modelTaskHandler.checkForDeadlineBreaches(&logMonitor, time);
 
 		currentEvent = NextEvent->getEventType();
 		// We check for overload here
@@ -63,6 +63,8 @@ int Simulator::runSimulation(Model *myModel, Set<RemoteSimulator *> *remoteSimul
 			break;
 		case TaskReady:
 			onTaskReady(time);
+			std::cout << "[" << time << "]"
+				  << "Started Server Execution for Task: " << currentTask->getID() << std::endl;
 			// std::cout << "Task scheduled on Server: " << currentTask->getID() << std::endl;
 			break;
 		case TaskFinished:
@@ -76,6 +78,9 @@ int Simulator::runSimulation(Model *myModel, Set<RemoteSimulator *> *remoteSimul
 		default:
 			break;
 		}
+		// if (currentTask->getID() == 6){
+		// 	std::cout << currentTask->getState() << std::endl;
+		// }
 		// Tick all remote simulations
 		for (remoteSimIterator->First(); !remoteSimIterator->IsDone(); remoteSimIterator->Next())
 		{
@@ -93,16 +98,21 @@ int Simulator::runSimulation(Model *myModel, Set<RemoteSimulator *> *remoteSimul
 		// If we need to migrate, add to remote taskset
 		if (migInstruction.migrate == true)
 		{
-			eventQueue.remove(currentTaskFinishedEvent);
-			currentTask->State = READY;
-			static Event readyTask(TaskReady, time);
-			readyTask.setEventTime(time);
-			eventQueue.addItem(&readyTask);
-			migInstruction.migratedTask->updateExecutionTimeForRemote();
+			if (currentTask->getID() == migInstruction.migratedTask->getID()){
+				eventQueue.remove(currentTaskFinishedEvent);
+				migInstruction.migratedTask->State = READY;
+				// static Event readyTask(TaskReady, time);
+				// readyTask.setEventTime(time);
+				// eventQueue.addItem(&readyTask);
+			}
+
 			migInstruction.migratedTask->updateProgressionTime(time);
 			addToRemoteTaskSet(migInstruction.simulatorTarget, migInstruction.migratedTask, time);
+			if (!simModel->isTaskSetEmpty())
+				currentTask = simModel->TaskSet->getItem(0);
 		}
 	}
+
 	std::cout << "Total Execution time of all tasks: " << Simulator::s_totalExecutionTime << std::endl;
 	return 1;
 }
@@ -194,8 +204,6 @@ void Simulator::runScheduler(double time)
 	if (currentEvent == TaskReady || time == 0)
 	{
 		currentTask = nextTask;
-		//std::cout << "[" << time << "]"
-		//		  << "Started Execution for Task: " << currentTask->getID() << std::endl;
 		setUpTaskForExecution(time);
 	}
 }
@@ -227,7 +235,7 @@ void Simulator::onTaskFinished(double time)
 
 	static Event readyTask(TaskReady, time);
 	readyTask.setEventTime(time);
-	logMonitor.logEnd(*currentTask, time);
+	// logMonitor.logEnd(*currentTask, time);
 	eventQueue.addItem(&readyTask);
 }
 

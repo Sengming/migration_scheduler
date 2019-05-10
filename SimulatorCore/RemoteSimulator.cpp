@@ -26,7 +26,7 @@ int RemoteSimulator::tickRemoteSimulations(int time)
 
 	//Update Tasks, and check for deadline misses.
 	simModel->modelTaskHandler.updateTaskStates(&logMonitor, time);
-	simModel->modelTaskHandler.checkForDeadlineBreaches(&logMonitor, time);
+	// simModel->modelTaskHandler.checkForDeadlineBreaches(&logMonitor, time);
 
 	currentEvent = NextEvent->getEventType();
 
@@ -40,6 +40,8 @@ int RemoteSimulator::tickRemoteSimulations(int time)
 	case TaskReady:
 		//std::cout << "Task Ready " << time << " " << currentTask << " Progression: " << currentTask->ExecutionTime << std::endl;
 		onTaskReady(time);
+		// std::cout << "[" << time << "]"
+		// 		  << "Started Execution for Task: " << currentTask->getID() << std::endl;
 		break;
 	case TaskFinished:
 		//std::cout << "Task Finished " << time << " " << currentTask <<" Progression: " << currentTask->ExecutionTime << std::endl;
@@ -62,6 +64,18 @@ void RemoteSimulator::initializeRemoteSim(Queue<MigrationEvent*>* migrationQueue
 
 	// Initialize our pointer to the main simulator's migrationQueue
 	m_migQueue = migrationQueue;
+}
+
+void RemoteSimulator::setUpTaskForExecution(double time)
+{
+	Event* TaskFin = new Event(TaskFinished, (currentTask->getRemainingExecutionTime() + time));
+		// std::cout << "Current Task: " << currentTask->getID() << " Remaining: " << currentTask->getRemainingExecutionTime() << std::endl;
+	TaskFin->setEventTime((currentTask->getRemainingExecutionTime() + time));
+	eventQueue.addItem(TaskFin);
+	currentTaskFinishedEvent = TaskFin;
+
+	currentTask->State = RUNNING;
+	logMonitor.logStart(*currentTask, time);
 }
 
 void RemoteSimulator::onTaskFinished(double time)

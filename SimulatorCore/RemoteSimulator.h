@@ -25,6 +25,7 @@ public:
 	RemoteSimulator(Model* model, unsigned id);
 	~RemoteSimulator();
 	void addToTaskSet(Task* task);
+	virtual void setUpTaskForExecution(double time);
 	int tickRemoteSimulations(int time);
 	void initializeRemoteSim(Queue<MigrationEvent*>* migrationQueue);
 	virtual void onTaskFinished(double time);

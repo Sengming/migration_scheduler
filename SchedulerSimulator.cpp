@@ -89,11 +89,12 @@ struct bench Kmeans{
 int main(int argc, char* argv[])
 {
 	//Declare the schedulers
-	FIFO SchedulerFIFO;
+	//EDF MainScheduler;
+	FIFO MainScheduler;
 	FIFO SchedulerEDF[MAX_REMOTE_NODE];
 
 	int runtime = 200000;
-	int totalTasks = 1000;
+	int totalTasks = 10;
 	int taskSet = 0;
 	int remoteNodes = 5;
 
@@ -162,7 +163,7 @@ int main(int argc, char* argv[])
 	MigrationScheduler migrationScheduler(&myTasks, remoteNodes);
 
 	//Create models and simulators
-	Model localModel("LocalModel", &myTasks, &SchedulerFIFO, runtime,
+	Model localModel("LocalModel", &myTasks, &MainScheduler, runtime,
 			 &migrationScheduler);
 
 	Model *remoteModel[MAX_REMOTE_NODE];
@@ -181,6 +182,9 @@ int main(int argc, char* argv[])
 	//Run simulations
 	mySimulator.runSimulation(&localModel, &remoteSimulators);
 
+
+	int wait;
+	std::cin >> wait;
 	for(int i=0; i<totalTasks; i++)
 		free(tasks[i]);
 
