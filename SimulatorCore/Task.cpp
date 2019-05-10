@@ -24,7 +24,8 @@ Task::Task(int id, double tarrival, double deadline, double executiontimehost, d
 	Priority = 0;
 	State = IDLE;
 	ExecutionTime = executiontimehost;
-	ExecutionTimeExchangeRate = executiontimehost/executiontimeremote;
+	// ExecutionTimeExchangeRate = executiontimehost/executiontimeremote;
+	ExecutionTimeExchangeRate = executiontimeremote/executiontimehost;
 	ID = id;
 	Period = period;
 	Progression = 0.0;
@@ -39,7 +40,8 @@ Task::Task(int id, double tarrival, double deadline, double executiontimehost, d
 	Priority = 0;
 	State = IDLE;
 	ExecutionTime = executiontimehost;
-	ExecutionTimeExchangeRate = executiontimehost/executiontimeremote;
+	// ExecutionTimeExchangeRate = executiontimehost/executiontimeremote;
+		ExecutionTimeExchangeRate = executiontimeremote/executiontimehost;
 	ID = id;
 	Period = period;
 	Progression = 0.0;

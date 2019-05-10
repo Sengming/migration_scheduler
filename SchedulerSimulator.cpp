@@ -42,10 +42,10 @@ struct bench{
 
 struct bench EP{
 	.tarrival = 0,
-	.deadline = 60,
+	.deadline = 100000,
 	.executiontimehost = 133.06,
 	.executiontimeremote = 303.90,
-	.period = 60,
+	.period = 100000,
 	.memoryusage = 0
 };
 
@@ -88,10 +88,10 @@ struct bench Kmeans{
 int main()
 {
 	//Declare the schedulers
-	FIFO SchedulerFIFO;
+	EDF MainScheduler;
 	EDF SchedulerEDF[5];
 
-	int runtime = 200;
+	int runtime = 1000;
 	int totalTasks = 10;
 	int taskSet = 0;
 
@@ -147,7 +147,7 @@ int main()
 	MigrationScheduler migrationScheduler(&myTasks, 5);
 
 	//Create models and simulators
-	Model localModel("LocalModel", &myTasks, &SchedulerFIFO, runtime,
+	Model localModel("LocalModel", &myTasks, &MainScheduler, runtime,
 			 &migrationScheduler);
 
 	Model remoteModel0("RemoteModel", &remoteTasks[0], &SchedulerEDF[0], runtime);

@@ -50,9 +50,9 @@ protected:
 	void onTaskReady(double time);
 	virtual void onTaskFinished(double time);
 	void onSimulationFinished(double time);
-
+	
 	void runScheduler(double time);
-	void setUpTaskForExecution(double time);
+	virtual void setUpTaskForExecution(double time);
 
 	//After a simulation, the simulator must reset
 	void resetSimulator();
