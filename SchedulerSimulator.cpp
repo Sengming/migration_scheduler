@@ -42,46 +42,46 @@ struct bench{
 
 struct bench EP{
 	.tarrival = 0,
-	.deadline = 60,
+	.deadline = 100000000,
 	.executiontimehost = 133.06,
 	.executiontimeremote = 303.90,
-	.period = 60,
+	.period =  100000000,
 	.memoryusage = 0
 };
 
 struct bench CG{
 	.tarrival = 0,
-	.deadline = 60,
+	.deadline = 100000000,
 	.executiontimehost = 90.00,
 	.executiontimeremote = 2678.16,
-	.period = 60,
+	.period =  100000000,
 	.memoryusage = 0
 };
 
 struct bench LU{
 	.tarrival = 0,
-	.deadline = 60,
+	.deadline = 100000000,
 	.executiontimehost = 120.28,
 	.executiontimeremote = 1538.78,
-	.period = 60,
+	.period =  100000000,
 	.memoryusage = 0
 };
 
 struct bench UA{
 	.tarrival = 0,
-	.deadline = 60,
+	.deadline =  100000000,
 	.executiontimehost = 74.46,
 	.executiontimeremote = 768.67,
-	.period = 60,
+	.period =  100000000,
 	.memoryusage = 0
 };
 
 struct bench Kmeans{
 	.tarrival = 0,
-	.deadline = 60,
+	.deadline =  100000000,
 	.executiontimehost = 20,
 	.executiontimeremote = 60,
-	.period = 60,
+	.period =  100000000,
 	.memoryusage = 0
 };
 
@@ -89,7 +89,8 @@ int main()
 {
 	//Declare the schedulers
 	FIFO SchedulerFIFO;
-	EDF SchedulerEDF[5];
+	//EDF SchedulerEDF[5];
+	FIFO SchedulerEDF[5];
 
 	int runtime = 200;
 	int totalTasks = 10;
