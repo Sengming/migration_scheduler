@@ -65,12 +65,12 @@ int Simulator::runSimulation(Model *myModel, Set<RemoteSimulator *> *remoteSimul
 			onTaskReady(time);
 			std::cout << "[" << time << "]"
 				  << "Started Server Execution for Task: " << currentTask->getID() << std::endl;
-			// std::cout << "Task scheduled on Server: " << currentTask->getID() << std::endl;
+			std::cout << "Task scheduled on Server: " << currentTask->getID() << std::endl;
 			break;
 		case TaskFinished:
 			onTaskFinished(time);
-			//std::cout << "[" << time << "]"
-			//		  << "Task Finished on Server: " << currentTask->getID() << std::endl;
+			std::cout << "[" << time << "]"
+					  << "Task Finished on Server: " << currentTask->getID() << std::endl;
 			break;
 		case SimulationFinished:
 			onSimulationFinished(time);
@@ -260,8 +260,8 @@ void Simulator::addToRemoteTaskSet(int simulatorNumber, Task *task, int time)
 	if (simModel->removeFromTaskSet(task))
 	{
 		remoteSim->addToTaskSet(task);
-		//std::cout << "[" << time << "]"
-		//		  << "Task " << task->getID() << " added to remote node: " << simulatorNumber << std::endl;
+		std::cout << "[" << time << "]"
+				  << "Task " << task->getID() << " added to remote node: " << simulatorNumber << std::endl;
 	}
 }
 

@@ -46,7 +46,7 @@ int RemoteSimulator::tickRemoteSimulations(int time)
 	case TaskFinished:
 		//std::cout << "Task Finished " << time << " " << currentTask <<" Progression: " << currentTask->ExecutionTime << std::endl;
 		currentTask->updateProgressionTime(time);
-		//std::cout << "["<< time <<"]" << "Task on Remote Node " << myId << " completed: " << currentTask->getID() << " Progression: " << currentTask->Progression << std::endl;
+		std::cout << "["<< time <<"]" << "Task on Remote Node " << myId << " completed: " << currentTask->getID() << " Progression: " << currentTask->Progression << std::endl;
 		onTaskFinished(time);
 		break;
 	default:
