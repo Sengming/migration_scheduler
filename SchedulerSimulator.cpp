@@ -29,7 +29,7 @@ manually and generated.
 *******************************************************************/
 
 
-const int MAX_TASK = 100;
+const int MAX_TASK = 10000;
 const int MAX_REMOTE_NODE = 100;
 
 struct bench{
@@ -86,20 +86,33 @@ struct bench Kmeans{
 	.memoryusage = 0
 };
 
-int main()
+int main(int argc, char* argv[])
 {
 	//Declare the schedulers
 	FIFO SchedulerFIFO;
 	FIFO SchedulerEDF[MAX_REMOTE_NODE];
 
-	int runtime = 200;
-	int totalTasks = 100;
+	int runtime = 200000;
+	int totalTasks = 1000;
 	int taskSet = 0;
-	int remoteNodes = 0;
+	int remoteNodes = 5;
 
 
 	Task *tasks[MAX_TASK];
 	Set<Task*> myTasks;
+
+
+	if(argc < 4)
+	{
+		std::cout << "./Simulator TotalTasks TaskSet TotalRemoteNode" << endl;
+		return 0;
+	}
+
+	std::string::size_type sz;   // alias of size_t
+
+	totalTasks = std::stoi(argv[1], &sz);
+	taskSet = std::stoi(argv[2], &sz);
+	remoteNodes = std::stoi(argv[3], &sz);
 
 	for(int i=0; i<totalTasks; i++)
 	{
@@ -176,6 +189,8 @@ int main()
 		free(remoteModel[i]);
 		free(remoteSimulator[i]);
 	}
+
+	return 0;
 
 }
 
