@@ -29,8 +29,8 @@ the scheduling logic.
 
 #define BOARD_ID 1
 #define BOARD_MEMORY (1*pow(2,30))
-#define BOARD_NB_CORE 4
-#define SERVER_NB_CORE 4
+#define BOARD_NB_CORE 1
+#define SERVER_NB_CORE 1
 #define INVALID_ID -1
 #define MIGRATE_SORT_CACHE_AFFINE 1
 class Board;
@@ -81,7 +81,9 @@ class MigrationScheduler{
      MigrationInstruction checkMigrate(Queue<MigrationEvent*>* events);
      unsigned schedule_wait();
      unsigned __migrate(Task proc, Board brd);
-     unsigned update_board_info(Board brd, unsigned memory);     
+     unsigned update_board_info(Board brd, unsigned memory);
+     unsigned migratetoboard(Task proc, Board brd);
+     unsigned retainboard(unsigned id);     
 };
 
 
@@ -93,10 +95,11 @@ class Board{   // for each board parameter
     unsigned available_core;
     unsigned free_memory;
     unsigned id;
+    bool available;
   
   public:
     Board(unsigned m_id, unsigned m_nb_core, unsigned m_memory_size):
-    nb_core(m_nb_core), memory_size(m_memory_size), available_core(m_nb_core),free_memory(memory_size), id(id) {}
+    nb_core(m_nb_core), memory_size(m_memory_size), available_core(m_nb_core),free_memory(memory_size), id(m_id) , available(true){}
   
 };
 

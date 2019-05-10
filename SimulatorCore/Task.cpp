@@ -71,6 +71,11 @@ Task::~Task()
 }
 
 
+
+double Task::getExecutionTimeExchangeRate(){
+	return ExecutionTimeExchangeRate;
+}
+
 unsigned Task::get_memory_usage()
 {
        return MemoryUsage;
