@@ -74,5 +74,6 @@ public:
 	double getRemainingExecutionTime();
 	unsigned get_memory_usage();
 	void updateExecutionTimeForRemote();
+	double getExecutionTimeExchangeRate();
 
 };
