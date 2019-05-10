@@ -46,11 +46,11 @@ protected:
 	double contextSwitch;
 
 	//Event-handeling functions:
-	void onTimeInterrupt(double time);
+	void onTimeInterrupt(double time, Event* previous);
 	void onTaskReady(double time);
 	virtual void onTaskFinished(double time);
 	void onSimulationFinished(double time);
-	
+
 	void runScheduler(double time);
 	virtual void setUpTaskForExecution(double time);
 

@@ -16,7 +16,6 @@ int RemoteSimulator::tickRemoteSimulations(int time)
 	timeInterrupt = simModel->TimeInterval;
 	contextSwitch = simModel->ContextSwitch;
 	preemptive = simModel->scheduler->isPreemptive();
-
 	Event* NextEvent;
 
 	eventQueue.sortQueue();
@@ -34,8 +33,7 @@ int RemoteSimulator::tickRemoteSimulations(int time)
 	switch (currentEvent)
 	{
 	case TimeInterrupt:
-		//std::cout << "Remote Node " << myId <<" Time interrupt " << time << std::endl;
-		onTimeInterrupt(time);
+		onTimeInterrupt(time, NextEvent);
 		break;
 	case TaskReady:
 		//std::cout << "Task Ready " << time << " " << currentTask << " Progression: " << currentTask->ExecutionTime << std::endl;
@@ -69,7 +67,6 @@ void RemoteSimulator::initializeRemoteSim(Queue<MigrationEvent*>* migrationQueue
 void RemoteSimulator::setUpTaskForExecution(double time)
 {
 	Event* TaskFin = new Event(TaskFinished, (currentTask->getRemainingExecutionTime() + time));
-		// std::cout << "Current Task: " << currentTask->getID() << " Remaining: " << currentTask->getRemainingExecutionTime() << std::endl;
 	TaskFin->setEventTime((currentTask->getRemainingExecutionTime() + time));
 	eventQueue.addItem(TaskFin);
 	currentTaskFinishedEvent = TaskFin;

@@ -59,7 +59,7 @@ int Simulator::runSimulation(Model *myModel, Set<RemoteSimulator *> *remoteSimul
 		switch (currentEvent)
 		{
 		case TimeInterrupt:
-			onTimeInterrupt(time);
+			onTimeInterrupt(time, NextEvent);
 			break;
 		case TaskReady:
 			onTaskReady(time);
@@ -96,21 +96,19 @@ int Simulator::runSimulation(Model *myModel, Set<RemoteSimulator *> *remoteSimul
 			simModel->m_migration_scheduler->checkMigrate(&m_migQueue);
 
 		// If we need to migrate, add to remote taskset
-		if (migInstruction.migrate == true)
-		{
-			if (currentTask->getID() == migInstruction.migratedTask->getID()){
-				eventQueue.remove(currentTaskFinishedEvent);
-				migInstruction.migratedTask->State = READY;
-				// static Event readyTask(TaskReady, time);
-				// readyTask.setEventTime(time);
-				// eventQueue.addItem(&readyTask);
-			}
+		// if (migInstruction.migrate == true)
+		// {
+		// 	if (currentTask->getID() == migInstruction.migratedTask->getID()){
+		// 		eventQueue.remove(currentTaskFinishedEvent);
+		// 		migInstruction.migratedTask->State = READY;
+		// 		// static Event readyTask(TaskReady, time);
+		// 		// readyTask.setEventTime(time);
+		// 		// eventQueue.addItem(&readyTask);
+		// 	}
 
-			migInstruction.migratedTask->updateProgressionTime(time);
-			addToRemoteTaskSet(migInstruction.simulatorTarget, migInstruction.migratedTask, time);
-			if (!simModel->isTaskSetEmpty())
-				currentTask = simModel->TaskSet->getItem(0);
-		}
+		// 	migInstruction.migratedTask->updateProgressionTime(time);
+		// 	addToRemoteTaskSet(migInstruction.simulatorTarget, migInstruction.migratedTask, time);
+		// }
 	}
 	return 1;
 }
@@ -124,12 +122,12 @@ Simulator::~Simulator()
 {
 }
 
-void Simulator::onTimeInterrupt(double time)
+void Simulator::onTimeInterrupt(double time, Event* previous)
 {
 	//create next TimeInterrupt event
-	static Event timeInter(TimeInterrupt, (time + timeInterrupt));
-	timeInter.setEventTime(time + timeInterrupt);
-	eventQueue.addItem(&timeInter);
+	Event* timeInter = new Event(TimeInterrupt, (time + timeInterrupt));
+	timeInter->setEventTime(time + timeInterrupt);
+	eventQueue.addItem(timeInter);
 
 	if (preemptive || time == 0)
 	{
@@ -140,7 +138,6 @@ void Simulator::onTimeInterrupt(double time)
 void Simulator::runScheduler(double time)
 {
 	Task *nextTask(0);
-
 	// If task set is empty we don't want to schedule
 	if (simModel->isTaskSetEmpty())
 	{
