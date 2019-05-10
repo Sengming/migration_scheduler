@@ -65,7 +65,7 @@ int Simulator::runSimulation(Model *myModel, Set<RemoteSimulator *> *remoteSimul
 			onTaskReady(time);
 			std::cout << "[" << time << "]"
 				  << "Started Server Execution for Task: " << currentTask->getID() << std::endl;
-			// std::cout << "Task scheduled on Server: " << currentTask->getID() << std::endl;
+			std::cout << "Task scheduled on Server: " << currentTask->getID() << std::endl;
 			break;
 		case TaskFinished:
 			onTaskFinished(time);
@@ -112,6 +112,8 @@ int Simulator::runSimulation(Model *myModel, Set<RemoteSimulator *> *remoteSimul
 				currentTask = simModel->TaskSet->getItem(0);
 		}
 	}
+
+	std::cout << "Total Execution time of all tasks: " << Simulator::s_totalExecutionTime << std::endl;
 	return 1;
 }
 

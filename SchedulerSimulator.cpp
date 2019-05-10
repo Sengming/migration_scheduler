@@ -29,7 +29,8 @@ manually and generated.
 *******************************************************************/
 
 
-const int MAX_TASK = 100;
+const int MAX_TASK = 10000;
+const int MAX_REMOTE_NODE = 100;
 
 struct bench{
 	double tarrival;
@@ -42,62 +43,77 @@ struct bench{
 
 struct bench EP{
 	.tarrival = 0,
-	.deadline = 100000,
+	.deadline = 100000000,
 	.executiontimehost = 133.06,
 	.executiontimeremote = 303.90,
-	.period = 100000,
+	.period =  100000000,
 	.memoryusage = 0
 };
 
 struct bench CG{
 	.tarrival = 0,
-	.deadline = 60,
+	.deadline = 100000000,
 	.executiontimehost = 90.00,
 	.executiontimeremote = 2678.16,
-	.period = 60,
+	.period =  100000000,
 	.memoryusage = 0
 };
 
 struct bench LU{
 	.tarrival = 0,
-	.deadline = 60,
+	.deadline = 100000000,
 	.executiontimehost = 120.28,
 	.executiontimeremote = 1538.78,
-	.period = 60,
+	.period =  100000000,
 	.memoryusage = 0
 };
 
 struct bench UA{
 	.tarrival = 0,
-	.deadline = 60,
+	.deadline =  100000000,
 	.executiontimehost = 74.46,
 	.executiontimeremote = 768.67,
-	.period = 60,
+	.period =  100000000,
 	.memoryusage = 0
 };
 
 struct bench Kmeans{
 	.tarrival = 0,
-	.deadline = 60,
+	.deadline =  100000000,
 	.executiontimehost = 20,
 	.executiontimeremote = 60,
-	.period = 60,
+	.period =  100000000,
 	.memoryusage = 0
 };
 
-int main()
+int main(int argc, char* argv[])
 {
 	//Declare the schedulers
+	//EDF MainScheduler;
 	EDF MainScheduler;
-	EDF SchedulerEDF[5];
+	EDF SchedulerEDF[MAX_REMOTE_NODE];
 
-	int runtime = 1000;
+	int runtime = 200000;
 	int totalTasks = 10;
 	int taskSet = 0;
+	int remoteNodes = 5;
 
 
 	Task *tasks[MAX_TASK];
 	Set<Task*> myTasks;
+
+
+	if(argc < 4)
+	{
+		std::cout << "./Simulator TotalTasks TaskSet TotalRemoteNode" << endl;
+		return 0;
+	}
+
+	std::string::size_type sz;   // alias of size_t
+
+	totalTasks = std::stoi(argv[1], &sz);
+	taskSet = std::stoi(argv[2], &sz);
+	remoteNodes = std::stoi(argv[3], &sz);
 
 	for(int i=0; i<totalTasks; i++)
 	{
@@ -138,42 +154,27 @@ int main()
 		}
 	}
 
-	Set<Task*> remoteTasks[5];
+	Set<Task*> remoteTasks[MAX_REMOTE_NODE];
 	Set<Model*> remoteModels;
 
 	Set <RemoteSimulator*> remoteSimulators;
 
 	// Instantiate migration scheduler
-	MigrationScheduler migrationScheduler(&myTasks, 5);
+	MigrationScheduler migrationScheduler(&myTasks, remoteNodes);
 
 	//Create models and simulators
 	Model localModel("LocalModel", &myTasks, &MainScheduler, runtime,
 			 &migrationScheduler);
 
-	Model remoteModel0("RemoteModel", &remoteTasks[0], &SchedulerEDF[0], runtime);
-	Model remoteModel1("RemoteModel", &remoteTasks[1], &SchedulerEDF[1], runtime);
-	Model remoteModel2("RemoteModel", &remoteTasks[2], &SchedulerEDF[2], runtime);
-	Model remoteModel3("RemoteModel", &remoteTasks[3], &SchedulerEDF[3], runtime);
-	Model remoteModel4("RemoteModel", &remoteTasks[4], &SchedulerEDF[4], runtime);
-
-	// Add to list of remote models
-	remoteModels.addItem(&remoteModel0);
-	remoteModels.addItem(&remoteModel1);
-	remoteModels.addItem(&remoteModel2);
-	remoteModels.addItem(&remoteModel3);
-	remoteModels.addItem(&remoteModel4);
-
-	RemoteSimulator remoteSimulator0(&remoteModel0, 0);
-	RemoteSimulator remoteSimulator1(&remoteModel1, 1);
-	RemoteSimulator remoteSimulator2(&remoteModel2, 2);
-	RemoteSimulator remoteSimulator3(&remoteModel3, 3);
-	RemoteSimulator remoteSimulator4(&remoteModel4, 4);
-
-	remoteSimulators.addItem(&remoteSimulator0);
-	remoteSimulators.addItem(&remoteSimulator1);
-	remoteSimulators.addItem(&remoteSimulator2);
-	remoteSimulators.addItem(&remoteSimulator3);
-	remoteSimulators.addItem(&remoteSimulator4);
+	Model *remoteModel[MAX_REMOTE_NODE];
+	RemoteSimulator *remoteSimulator[MAX_REMOTE_NODE];
+	for(int i=0; i<remoteNodes; i++)
+	{
+		remoteModel[i] = new Model ("RemoteModel", &remoteTasks[i], &SchedulerEDF[i], runtime);
+		remoteModels.addItem(remoteModel[i]);
+		remoteSimulator[i] = new RemoteSimulator(remoteModel[i], i);
+		remoteSimulators.addItem(remoteSimulator[i]);
+	}
 
 	//Create a simulator
 	Simulator mySimulator;
@@ -183,6 +184,15 @@ int main()
 
 	for(int i=0; i<totalTasks; i++)
 		free(tasks[i]);
+
+	for(int i=0; i<remoteNodes; i++)
+	{
+		free(remoteModel[i]);
+		free(remoteSimulator[i]);
+	}
+
+	return 0;
+
 }
 
 

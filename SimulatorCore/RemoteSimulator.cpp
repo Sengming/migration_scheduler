@@ -4,7 +4,7 @@
 
 int RemoteSimulator::runSimulation(Model* myModel, Set<RemoteSimulator*>* remoteSimulators)
 {
-	std::cout << "Remote runSimulations currently not allowed" << std::endl;
+	//std::cout << "Remote runSimulations currently not allowed" << std::endl;
 	return 0;
 }
 
