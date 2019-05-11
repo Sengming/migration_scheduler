@@ -93,7 +93,7 @@ int main(int argc, char* argv[])
 	EDF SchedulerEDF[MAX_REMOTE_NODE];
 
 	int runtime = 200000;
-	int totalTasks = 1000;
+	int totalTasks = 10;
 	int taskSet = 0;
 	int remoteNodes = 5;
 

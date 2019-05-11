@@ -65,7 +65,6 @@ int Simulator::runSimulation(Model *myModel, Set<RemoteSimulator *> *remoteSimul
 			onTaskReady(time);
 			std::cout << "[" << time << "]"
 				  << "Started Server Execution for Task: " << currentTask->getID() << std::endl;
-			// std::cout << "Task scheduled on Server: " << currentTask->getID() << std::endl;
 			break;
 		case TaskFinished:
 			onTaskFinished(time);
@@ -95,21 +94,23 @@ int Simulator::runSimulation(Model *myModel, Set<RemoteSimulator *> *remoteSimul
 		MigrationInstruction migInstruction =
 			simModel->m_migration_scheduler->checkMigrate(&m_migQueue);
 
-		// If we need to migrate, add to remote taskset
-		// if (migInstruction.migrate == true)
-		// {
-		// 	if (currentTask->getID() == migInstruction.migratedTask->getID()){
-		// 		eventQueue.remove(currentTaskFinishedEvent);
-		// 		migInstruction.migratedTask->State = READY;
-		// 		// static Event readyTask(TaskReady, time);
-		// 		// readyTask.setEventTime(time);
-		// 		// eventQueue.addItem(&readyTask);
-		// 	}
+		//If we need to migrate, add to remote taskset
+		if (migInstruction.migrate == true)
+		{
+			if (currentTask->getID() == migInstruction.migratedTask->getID()){
+				eventQueue.remove(currentTaskFinishedEvent);
+				migInstruction.migratedTask->State = READY;
+				// static Event readyTask(TaskReady, time);
+				// readyTask.setEventTime(time);
+				// eventQueue.addItem(&readyTask);
+			}
 
-		// 	migInstruction.migratedTask->updateProgressionTime(time);
-		// 	addToRemoteTaskSet(migInstruction.simulatorTarget, migInstruction.migratedTask, time);
-		// }
+			migInstruction.migratedTask->updateProgressionTime(time);
+			addToRemoteTaskSet(migInstruction.simulatorTarget, migInstruction.migratedTask, time);
+		}
 	}
+
+	std::cout << "Total Execution time of all tasks: " << Simulator::s_totalExecutionTime << std::endl;
 	return 1;
 }
 
@@ -226,12 +227,12 @@ void Simulator::onTaskFinished(double time)
 	currentTask->State = FINISHED;
 	currentTask->updateProgressionTime(time);
 
-	Simulator::s_totalExecutionTime += currentTask->Progression;
-
-	static Event readyTask(TaskReady, time);
-	readyTask.setEventTime(time);
+	simModel->removeFromTaskSet(currentTask);
+	Event *readyTask = new Event(TaskReady, time);
+	readyTask->setEventTime(time);
 	// logMonitor.logEnd(*currentTask, time);
-	eventQueue.addItem(&readyTask);
+	eventQueue.addItem(readyTask);
+	Simulator::s_totalExecutionTime = time;
 }
 
 void Simulator::onSimulationFinished(double time)

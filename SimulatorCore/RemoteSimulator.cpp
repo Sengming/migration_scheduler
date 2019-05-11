@@ -79,7 +79,7 @@ void RemoteSimulator::onTaskFinished(double time)
 {
 	// Run base class' method first
 	Simulator::onTaskFinished(time);
-	simModel->removeFromTaskSet(currentTask);
+	// simModel->removeFromTaskSet(currentTask);
 	MigrationEvent* event = new MigrationEvent();
 	event->remoteComplete = myId;
 	event->taskComplete = currentTask;
