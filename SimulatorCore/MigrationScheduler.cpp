@@ -127,7 +127,7 @@ MigrationInstruction MigrationScheduler::checkMigrate(Queue<MigrationEvent*>* ev
   // print number of tasks
   //cout << "\nnumber of Task: " << m_localTasks->numberOfItems()<<endl;
 
- if(m_localTasks->numberOfItems() && total_available_cores > 0){ 
+ if(m_localTasks->numberOfItems() > 1 && total_available_cores > 0){ 
   double max = -1;
   static Task* task_tosend;
   AbstractIterator<Task*>* taskIterator = m_localTasks->createIterator();
